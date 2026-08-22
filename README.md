@@ -11,7 +11,9 @@
 
 ---
 
-## 🏛️ System Architecture
+## 📐 System & Software Engineering Diagrams
+
+### 1. 🏛️ High-Level System Architecture Diagram
 
 ```mermaid
 graph TD
@@ -25,10 +27,10 @@ graph TD
     end
     
     subgraph Data_Layer ["Data & Storage"]
-        MongoDB[("MongoDB Atlas<br/>Users, Predictions, Buildings, Tips, Alerts, Audits")]
+        MongoDB[("MongoDB Atlas Cloud<br/>Users, Predictions, Buildings, Tips, Alerts, Audits")]
     end
 
-    subgraph ML_Microservice ["Python Flask ML Service (Port 5001)"]
+    subgraph ML_Microservice ["Python Flask ML Microservice (Port 5001)"]
         FlaskAPI["Flask REST API"]
         RFModel["Random Forest Regressor (150 Trees)"]
         Scaler["StandardScaler (30 Features)"]
@@ -37,11 +39,319 @@ graph TD
     Client -->|HTTP / JSON Requests| AuthMiddleware
     AuthMiddleware --> ValidateMiddleware
     ValidateMiddleware --> Controllers
-    Controllers -->|CRUD Operations| MongoDB
+    Controllers -->|Mongoose Queries| MongoDB
     Controllers -->|Slab Breakdown| CEBEngine
     Controllers -->|POST /predict & /predict-bulk| FlaskAPI
     FlaskAPI --> Scaler
     Scaler --> RFModel
+```
+
+---
+
+### 2. 🎭 System Use Case Diagram
+
+```mermaid
+flowchart LR
+    subgraph Actors
+        U(("👤 Regular User<br/>(Household Member)"))
+        A(("🛡️ System Admin<br/>(Admin + Analyst + Building Mgr)"))
+    end
+
+    subgraph User_Capabilities ["Household User Use Cases"]
+        UC1(["⚡ Run Energy Prediction (Wh)"])
+        UC2(["🇱🇰 Calculate CEB Monthly Bill"])
+        UC3(["☀️ Simulate Rooftop Solar PV Offset"])
+        UC4(["📜 View & Export Prediction History (CSV/PDF)"])
+        UC5(["💡 Browse Energy Saving Tips Library"])
+        UC6(["📝 Manage User Profile"])
+    end
+
+    subgraph Admin_Capabilities ["Administrative & Analyst Use Cases"]
+        AC1(["👥 Manage Accounts (Suspend / Role Toggle / Delete)"])
+        AC2(["➕ Register New Admin Accounts (Admin Only)"])
+        AC3(["📊 Query Anonymized Analyst Dataset & Export CSV"])
+        AC4(["🏢 Multi-Unit Building & Alert Threshold Management"])
+        AC5(["🏗️ Simulate Whole-Building Energy Load"])
+        AC6(["📑 Process Batch CSV Telemetry Files"])
+        AC7(["🔄 Trigger ML Random Forest Retraining & Evaluation"])
+        AC8(["📢 Broadcast System Announcements"])
+        AC9(["🔒 Review Security & Activity Audit Trail"])
+    end
+
+    U --> UC1
+    U --> UC2
+    U --> UC3
+    U --> UC4
+    U --> UC5
+    U --> UC6
+
+    A --> UC1
+    A --> UC2
+    A --> UC3
+    A --> UC4
+    A --> UC5
+    A --> UC6
+    A --> AC1
+    A --> AC2
+    A --> AC3
+    A --> AC4
+    A --> AC5
+    A --> AC6
+    A --> AC7
+    A --> AC8
+    A --> AC9
+```
+
+---
+
+### 3. 🧩 Database & Backend Class Diagram (Mongoose Models)
+
+```mermaid
+classDiagram
+    class User {
+        +ObjectId _id
+        +String name
+        +String email
+        +String password
+        +String role ("user" | "admin")
+        +String status ("active" | "suspended")
+        +String city
+        +String phone
+        +Date createdAt
+        +comparePassword(enteredPassword) Boolean
+    }
+
+    class Prediction {
+        +ObjectId _id
+        +ObjectId userId
+        +ObjectId buildingId
+        +Number indoorTemp
+        +Number outdoorTemp
+        +Number indoorHumidity
+        +Number outdoorHumidity
+        +Number occupants
+        +Number appliancesActive
+        +Number hour
+        +String dayOfWeek
+        +String buildingType ("House" | "Apartment" | "Office")
+        +Number predictedWh
+        +Number lightsWh
+        +String usageCategory ("Low" | "Normal" | "High" | "Very High")
+        +Number estimatedCostLKR
+        +Date createdAt
+    }
+
+    class Building {
+        +ObjectId _id
+        +String name
+        +String type ("House" | "Apartment" | "Office")
+        +ObjectId managerId
+        +Number floorsCount
+        +Number unitsCount
+        +String location
+        +Number alertThresholdWh
+        +Date createdAt
+    }
+
+    class Tip {
+        +ObjectId _id
+        +String title
+        +String content
+        +String usageLevel ("All" | "Low" | "Normal" | "High" | "Very High")
+        +String appliance ("General" | "AC" | "Fridge" | "Lighting" | "Water Heater")
+        +Number potentialSavingsPercent
+        +ObjectId createdBy
+        +Date createdAt
+    }
+
+    class Alert {
+        +ObjectId _id
+        +ObjectId buildingId
+        +Number floorNumber
+        +Number predictedWh
+        +Number thresholdWh
+        +String severity ("Low" | "Medium" | "High" | "Critical")
+        +String message
+        +Date createdAt
+    }
+
+    class AuditLog {
+        +ObjectId _id
+        +ObjectId userId
+        +String userName
+        +String action
+        +String details
+        +Date createdAt
+    }
+
+    class Announcement {
+        +ObjectId _id
+        +String title
+        +String message
+        +String badge
+        +ObjectId createdBy
+        +Date createdAt
+    }
+
+    User "1" --> "*" Prediction : logs
+    User "1" --> "*" Building : manages
+    User "1" --> "*" AuditLog : generates
+    User "1" --> "*" Tip : authors
+    User "1" --> "*" Announcement : broadcasts
+    Building "1" --> "*" Alert : triggers
+    Building "1" --> "*" Prediction : associates
+```
+
+---
+
+### 4. 🔄 Sequence Diagram 1: Energy Prediction & Real-Time Telemetry Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Household User / Admin
+    participant Frontend as React Predictor UI
+    participant Backend as Express API Server
+    participant Auth as Auth & Validate Middleware
+    participant Flask as Flask ML Microservice
+    participant RF as Random Forest Regressor
+    participant CEB as CEB Tariff Slab Engine
+    participant DB as MongoDB Atlas
+
+    User->>Frontend: Select Inputs (Temp, Humidity, Occupants, Appliances, Hour)
+    Frontend->>Backend: POST /api/predict (Bearer JWT Token, Payload)
+    Backend->>Auth: Verify JWT & Validate Sensor Bounds
+    Auth-->>Backend: Authentication & Validation OK
+
+    Backend->>Flask: POST /predict (Sensor Features + User Telemetry)
+    Flask->>Flask: Normalize 30-feature vector with StandardScaler
+    Flask->>RF: model.predict(scaled_features)
+    RF-->>Flask: Return predicted Wh (e.g. 258.93 Wh)
+    Flask->>Flask: Compute usage category, lights Wh, & print CMD log
+    Flask-->>Backend: HTTP 200 { predictedWh, lightsWh, usageCategory, cost }
+
+    Backend->>CEB: calculateCEBBill(monthlyUnits)
+    CEB-->>Backend: Itemized 6-slab cost breakdown & tips
+    Backend->>DB: Prediction.create() [Save record]
+    Backend->>Backend: Output [WATTWISE PREDICTION EVENT] to CMD Terminal
+    Backend-->>Frontend: HTTP 200 JSON Response
+
+    Frontend-->>User: Display Wh Gauge, Load Badge, CEB Bill Slabs & Actionable Tips
+```
+
+---
+
+### 5. 🔐 Sequence Diagram 2: Authentication & Admin-Only Admin Creation Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Guest as Guest User
+    actor Admin as System Administrator
+    participant Frontend as React Client
+    participant AuthAPI as Express Auth Router
+    participant AdminAPI as Express Admin Router
+    participant DB as MongoDB Atlas
+
+    Note over Guest,Frontend: 1. Public Self-Registration (Strictly Regular User)
+    Guest->>Frontend: Enters Name, Email, Password
+    Frontend->>AuthAPI: POST /api/auth/register
+    AuthAPI->>AuthAPI: Enforce role = 'user' (Hardened)
+    AuthAPI->>DB: User.create({ role: 'user' })
+    AuthAPI-->>Frontend: HTTP 201 { token, user: { role: 'user' } }
+
+    Note over Admin,Frontend: 2. Administrator Creates Another Admin
+    Admin->>Frontend: Opens Admin Console -> User Accounts
+    Admin->>Frontend: Clicks "+ Register New Admin" & submits form
+    Frontend->>AdminAPI: POST /api/admin/create-admin (Bearer Admin JWT)
+    AdminAPI->>AdminAPI: Verify caller is Admin
+    AdminAPI->>DB: User.create({ role: 'admin' })
+    AdminAPI->>DB: AuditLog.create("ADMIN_CREATE_ADMIN")
+    AdminAPI-->>Frontend: HTTP 201 "Admin account created successfully"
+    Frontend-->>Admin: Show Success Toast & Refresh User List
+```
+
+---
+
+### 6. 📈 Sequence Diagram 3: Energy Analyst Query & Dataset Export Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Analyst as Energy Analyst / Admin
+    participant UI as Admin Analytics Console
+    participant Backend as Express Analyst Router
+    participant DB as MongoDB Atlas
+
+    Analyst->>UI: Select Filter Criteria (Property Type, Wh Range, Hour Window)
+    Analyst->>UI: Clicks "Execute Query"
+    UI->>Backend: POST /api/analyst/query (Filter Parameters)
+    Backend->>DB: Prediction.find(queryCriteria).sort({ createdAt: -1 })
+    DB-->>Backend: Matching Historical Telemetry Records
+    Backend->>Backend: Compute Aggregate Stats (Count, Mean Wh, Total Cost)
+    Backend-->>UI: HTTP 200 { totalMatching, records, summary }
+    UI-->>Analyst: Render Filtered Dataset Table
+
+    Analyst->>UI: Clicks "Export Filtered CSV"
+    UI->>UI: Format Records into CSV Blob & Trigger Browser Download
+    UI-->>Analyst: Download `wattwise_analyst_query_YYYY-MM-DD.csv`
+```
+
+---
+
+### 7. ⚡ Decision & Activity Diagram: CEB 2024 Residential Tariff Slab Algorithm
+
+```mermaid
+flowchart TD
+    Start(["Start Bill Calculation (Monthly Units: U)"]) --> CheckSlab{Monthly Units U}
+
+    CheckSlab -->|U <= 30| S1["Slab 1: 0 - 30 units<br/>Energy: U * Rs. 2.50<br/>Fixed Charge: Rs. 180.00"]
+    CheckSlab -->|31 <= U <= 60| S2["Slab 2: 31 - 60 units<br/>30 @ Rs. 2.50 + (U-30) @ Rs. 4.85<br/>Fixed Charge: Rs. 240.00"]
+    CheckSlab -->|61 <= U <= 90| S3["Slab 3: 61 - 90 units<br/>30 @ Rs. 2.50 + 30 @ Rs. 4.85 + (U-60) @ Rs. 7.85<br/>Fixed Charge: Rs. 360.00"]
+    CheckSlab -->|91 <= U <= 120| S4["Slab 4: 91 - 120 units<br/>30 @ 2.50 + 30 @ 4.85 + 30 @ 7.85 + (U-90) @ 10.00<br/>Fixed Charge: Rs. 960.00"]
+    CheckSlab -->|121 <= U <= 180| S5["Slab 5: 121 - 180 units<br/>30 @ 2.50 + 30 @ 4.85 + 30 @ 7.85 + 30 @ 10.00 + (U-120) @ 27.75<br/>Fixed Charge: Rs. 1,500.00"]
+    CheckSlab -->|U > 180| S6["Slab 6: 181+ units (Highest Tier)<br/>30 @ 2.50 + 30 @ 4.85 + 30 @ 7.85 + 30 @ 10.00 + 60 @ 27.75 + (U-180) @ 45.00<br/>Fixed Charge: Rs. 2,000.00"]
+
+    S1 --> Sum["Total Bill = Energy Charge + Fixed Charge + Fuel Surcharge"]
+    S2 --> Sum
+    S3 --> Sum
+    S4 --> Sum
+    S5 --> Sum
+    S6 --> Sum
+
+    Sum --> Tips["Attach Tier-Specific Energy Saving Advice"]
+    Tips --> End(["Return Itemized JSON Result"])
+```
+
+---
+
+### 8. 🌐 Deployment & DevOps CI/CD Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph Development_Environment ["Local & CI/CD Pipeline"]
+        GitRepo["GitHub Repository<br/>ayodyase/wattwise"]
+        GHActions["GitHub Actions CI Pipeline<br/>.github/workflows/ci.yml"]
+        BackendCI["Node.js & CEB Tariff Unit Tests"]
+        FrontendCI["React Vite Build Verification"]
+        MLCI["Python 3.12 Flask Sanity Checks"]
+    end
+
+    subgraph Production_Deployment ["Live Runtime Stack"]
+        Browser["User Web Browser<br/>(Port 3000)"]
+        NodeServer["Node.js Express REST API<br/>(Port 5000)"]
+        FlaskServer["Python Flask ML Microservice<br/>(Port 5001)"]
+        MongoCluster[("MongoDB Atlas Cloud Database")]
+    end
+
+    GitRepo -->|Push / Pull Request| GHActions
+    GHActions --> BackendCI
+    GHActions --> FrontendCI
+    GHActions --> MLCI
+
+    Browser -->|HTTP/HTTPS| NodeServer
+    NodeServer -->|REST POST| FlaskServer
+    NodeServer -->|Mongoose TLS| MongoCluster
 ```
 
 ---
@@ -186,15 +496,6 @@ npm test
 cd frontend
 npm run build
 ```
-
----
-
-## 📦 GitHub Actions CI/CD Workflow
-
-The automated CI workflow (`.github/workflows/ci.yml`) runs on every push and pull request to `main`:
-1. **Backend Job**: Installs dependencies, validates syntax, and executes the CEB 2024 Tariff formula unit tests.
-2. **Frontend Job**: Builds the production bundle with Vite.
-3. **ML Microservice Job**: Sets up Python 3.12, installs dependencies, and tests `app.py` model loading integrity.
 
 ---
 
