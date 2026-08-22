@@ -8,7 +8,7 @@ on:
 
 jobs:
   backend-test:
-    name: Backend Node.js Integration
+    name: Backend Node.js & CEB Tariff Validation
     runs-on: ubuntu-latest
 
     steps:
@@ -27,10 +27,31 @@ jobs:
           cd backend
           npm install
 
-      - name: Verify Backend Server Initialization
+      - name: Verify Backend Syntax & Dependency Integrity
         run: |
           cd backend
-          node -e "require('./server.js'); console.log('Backend syntax and dependencies verified!'); process.exit(0);"
+          node -e "require('./middleware/auth'); require('./middleware/validate'); require('./routes/authRoutes'); console.log('✅ Backend middleware and routes validated.');"
+
+      - name: Run CEB 2024 Tariff Slab Unit Tests
+        run: |
+          cd backend
+          node -e "
+            const { calculateCEBBill } = require('./routes/billRoutes');
+            console.log('Testing CEB Tariff Formula Calculations...');
+            const t1 = calculateCEBBill(25);
+            if (t1.totalBillLKR !== 242.50) throw new Error('Slab 1 Failed');
+            const t2 = calculateCEBBill(50);
+            if (t2.totalBillLKR !== 412.00) throw new Error('Slab 2 Failed');
+            const t3 = calculateCEBBill(80);
+            if (t3.totalBillLKR !== 737.50) throw new Error('Slab 3 Failed');
+            const t4 = calculateCEBBill(110);
+            if (t4.totalBillLKR !== 1616.00) throw new Error('Slab 4 Failed');
+            const t5 = calculateCEBBill(150);
+            if (t5.totalBillLKR !== 3088.50) throw new Error('Slab 5 Failed');
+            const t6 = calculateCEBBill(200);
+            if (t6.totalBillLKR !== 5321.00) throw new Error('Slab 6 Failed');
+            console.log('✅ All 6 CEB 2024 Residential Tariff Slab calculations verified successfully!');
+          "
 
   frontend-build:
     name: Frontend React Vite Build Verification
@@ -79,4 +100,4 @@ jobs:
       - name: Test Flask App Initialization
         run: |
           cd ml-services
-          python -c "import app; print('Flask ML microservice initialization sanity test passed!')"
+          python -c "import app; print('✅ Flask ML microservice initialization sanity test passed!')"

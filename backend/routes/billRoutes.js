@@ -121,3 +121,4 @@ router.post('/calculate', validateBillInput, (req, res) => {
 });
 
 module.exports = router;
+module.exports.calculateCEBBill = calculateCEBBill;
