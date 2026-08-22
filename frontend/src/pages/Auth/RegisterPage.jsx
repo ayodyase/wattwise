@@ -1,16 +1,17 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { Zap, User, Mail, Lock, AlertCircle, Shield } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
+import { Zap, User, Mail, Lock, AlertCircle } from 'lucide-react';
 
 export default function RegisterPage() {
   const { register } = useContext(AuthContext);
+  const { success, error: toastError } = useToast();
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -19,21 +20,23 @@ export default function RegisterPage() {
     setError('');
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      const msg = 'Password must be at least 6 characters long';
+      setError(msg);
+      toastError(msg);
       return;
     }
 
     setLoading(true);
 
     try {
-      const createdUser = await register(name, email, password, role);
-      if (createdUser.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/predict');
-      }
+      // Standard public self-registration creates regular user accounts
+      await register(name, email, password, 'user');
+      success('Account created successfully! Welcome to WattWise.');
+      navigate('/predict');
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed. Try a different email.');
+      const msg = err.response?.data?.error || 'Registration failed. Try a different email.';
+      setError(msg);
+      toastError(msg);
     } finally {
       setLoading(false);
     }
@@ -58,7 +61,7 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="glass-card p-6 rounded-3xl border-slate-800 space-y-4">
+        <form onSubmit={handleSubmit} className="glass-card p-6 sm:p-8 rounded-3xl border-slate-800 space-y-4">
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label>
             <div className="relative">
@@ -104,40 +107,12 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Account Role Type</label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setRole('user')}
-                className={`py-2.5 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                  role === 'user'
-                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
-                    : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
-                }`}
-              >
-                <User className="w-3.5 h-3.5" /> Regular User
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('admin')}
-                className={`py-2.5 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                  role === 'admin'
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500'
-                    : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
-                }`}
-              >
-                <Shield className="w-3.5 h-3.5" /> System Admin
-              </button>
-            </div>
-          </div>
-
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold text-sm hover:opacity-90 shadow-glow transition-all disabled:opacity-50"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold text-sm hover:opacity-90 shadow-glow transition-all disabled:opacity-50"
           >
-            {loading ? 'Registering Account...' : 'Create Account'}
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
 
           <p className="text-center text-xs text-slate-400 pt-2">

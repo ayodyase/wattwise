@@ -48,6 +48,52 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// @route POST /api/admin/create-admin (Only existing admin can create another admin)
+router.post('/create-admin', async (req, res) => {
+  try {
+    const { name, email, password, city, phone } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, error: 'Please provide name, email and password' });
+    }
+
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(400).json({ success: false, error: 'Email address is already registered' });
+    }
+
+    const newAdmin = await User.create({
+      name,
+      email: email.toLowerCase(),
+      password,
+      role: 'admin',
+      city: city || 'Colombo',
+      phone: phone || ''
+    });
+
+    await AuditLog.create({
+      userId: req.user._id,
+      userName: req.user.name,
+      action: 'ADMIN_CREATE_ADMIN',
+      details: `Admin ${req.user.email} created new Administrator account for ${newAdmin.email}`
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Admin account created successfully for ${newAdmin.email}`,
+      user: {
+        id: newAdmin._id,
+        name: newAdmin.name,
+        email: newAdmin.email,
+        role: newAdmin.role,
+        status: newAdmin.status
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // @route PUT /api/admin/users/:id/role
 router.put('/users/:id/role', async (req, res) => {
   try {

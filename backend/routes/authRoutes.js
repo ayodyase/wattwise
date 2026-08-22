@@ -25,14 +25,12 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Email address is already registered' });
     }
 
-    // Assign requested role or default to 'user'
-    const assignedRole = (role === 'admin') ? 'admin' : 'user';
-
+    // Public registration always creates a standard 'user' account
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       password,
-      role: assignedRole
+      role: 'user'
     });
 
     await AuditLog.create({

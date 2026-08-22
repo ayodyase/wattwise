@@ -43,6 +43,13 @@ export default function AdminDashboardPage() {
   const [simFloorOccupants, setSimFloorOccupants] = useState('8');
   const [simBuildingResult, setSimBuildingResult] = useState(null);
 
+  // New Admin Form State
+  const [showCreateAdmin, setShowCreateAdmin] = useState(false);
+  const [newAdminName, setNewAdminName] = useState('');
+  const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [newAdminPassword, setNewAdminPassword] = useState('');
+  const [newAdminCity, setNewAdminCity] = useState('Colombo');
+
   // New Forms State
   const [newBuildingName, setNewBuildingName] = useState('');
   const [newBuildingType, setNewBuildingType] = useState('Office');
@@ -153,6 +160,30 @@ export default function AdminDashboardPage() {
       success("User account deleted successfully");
     } catch (err) {
       toastError(err.response?.data?.error || "Delete failed");
+    }
+  };
+
+  const handleCreateAdmin = async (e) => {
+    e.preventDefault();
+    if (newAdminPassword.length < 6) {
+      toastError("Password must be at least 6 characters long");
+      return;
+    }
+    try {
+      const res = await axios.post('/api/admin/create-admin', {
+        name: newAdminName,
+        email: newAdminEmail,
+        password: newAdminPassword,
+        city: newAdminCity
+      });
+      setNewAdminName('');
+      setNewAdminEmail('');
+      setNewAdminPassword('');
+      setShowCreateAdmin(false);
+      fetchUsers();
+      success(res.data.message || "New Admin account created successfully!");
+    } catch (err) {
+      toastError(err.response?.data?.error || "Failed to create Admin account");
     }
   };
 
@@ -464,13 +495,99 @@ export default function AdminDashboardPage() {
                 className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
               />
             </div>
-            <button
-              onClick={fetchUsers}
-              className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold hover:bg-amber-400 transition-colors"
-            >
-              Search Users
-            </button>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <button
+                onClick={fetchUsers}
+                className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-bold transition-colors"
+              >
+                Search
+              </button>
+              <button
+                onClick={() => setShowCreateAdmin(!showCreateAdmin)}
+                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-glow transition-all whitespace-nowrap"
+              >
+                <Plus className="w-4 h-4" /> {showCreateAdmin ? 'Cancel' : 'Register New Admin'}
+              </button>
+            </div>
           </div>
+
+          {/* Collapsible Create New Admin Form */}
+          {showCreateAdmin && (
+            <form onSubmit={handleCreateAdmin} className="glass-card p-6 rounded-3xl border-amber-500/40 bg-gradient-to-b from-amber-500/10 via-slate-900 to-transparent space-y-4 animate-fade-in">
+              <div className="flex items-center gap-2 text-sm font-bold text-white">
+                <Shield className="w-4 h-4 text-amber-400" />
+                <span>Register a New System Administrator Account</span>
+              </div>
+              <p className="text-xs text-slate-400">
+                Only authenticated administrators can grant administrative and analyst privileges to new team members.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-300 mb-1">Admin Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={newAdminName}
+                    onChange={(e) => setNewAdminName(e.target.value)}
+                    placeholder="e.g. Priyantha Silva"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-300 mb-1">Email Address</label>
+                  <input
+                    type="email"
+                    required
+                    value={newAdminEmail}
+                    onChange={(e) => setNewAdminEmail(e.target.value)}
+                    placeholder="admin2@wattwise.lk"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-300 mb-1">Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={newAdminPassword}
+                    onChange={(e) => setNewAdminPassword(e.target.value)}
+                    placeholder="Min 6 characters"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-300 mb-1">City / Region</label>
+                  <input
+                    type="text"
+                    value={newAdminCity}
+                    onChange={(e) => setNewAdminCity(e.target.value)}
+                    placeholder="Colombo"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:border-amber-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateAdmin(false)}
+                  className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white text-xs font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-glow transition-all"
+                >
+                  Create Admin Account
+                </button>
+              </div>
+            </form>
+          )}
 
           <div className="glass-card rounded-3xl overflow-hidden border-slate-800">
             <div className="overflow-x-auto">
