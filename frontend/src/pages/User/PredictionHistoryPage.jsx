@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { History, Trash2, Search, Filter, AlertCircle, RefreshCw } from 'lucide-react';
+import { History, Trash2, Search, Filter, AlertCircle, RefreshCw, Download, Printer, Zap } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 export default function PredictionHistoryPage() {
+  const { success, error: toastError } = useToast();
+
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterCategory, setFilterCategory] = useState('All');
@@ -15,6 +18,7 @@ export default function PredictionHistoryPage() {
       setPredictions(res.data.predictions || []);
     } catch (err) {
       console.error("History fetch error:", err);
+      toastError("Failed to fetch prediction history");
     } finally {
       setLoading(false);
     }
@@ -29,9 +33,32 @@ export default function PredictionHistoryPage() {
     try {
       await axios.delete(`/api/predict/history/${id}`);
       setPredictions(predictions.filter(p => p._id !== id));
+      success("Prediction record deleted");
     } catch (err) {
-      alert("Delete failed: " + (err.response?.data?.error || err.message));
+      toastError(err.response?.data?.error || "Delete failed");
     }
+  };
+
+  const handleExportCSV = () => {
+    if (predictions.length === 0) {
+      toastError("No predictions to export");
+      return;
+    }
+
+    let csvContent = "Date,PropertyType,IndoorTemp,OutdoorTemp,Hour,DayOfWeek,ActiveAppliances,PredictedWh,Category,EstCostLKR\n";
+    predictions.forEach(p => {
+      csvContent += `"${new Date(p.createdAt).toISOString()}","${p.buildingType}",${p.indoorTemp},${p.outdoorTemp},${p.hour},"${p.dayOfWeek}",${p.appliancesActive},${p.predictedWh},"${p.usageCategory}",${p.estimatedCostLKR}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `wattwise_my_history_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    success("Prediction history exported to CSV");
   };
 
   const filteredPredictions = predictions.filter(p => {
@@ -51,12 +78,30 @@ export default function PredictionHistoryPage() {
           <p className="text-xs text-slate-400 mt-1">Review past energy consumption forecasts saved under your account.</p>
         </div>
 
-        <button
-          onClick={fetchHistory}
-          className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-1.5"
-        >
-          <RefreshCw className="w-3.5 h-3.5" /> Refresh Log
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportCSV}
+            className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 hover:text-emerald-400 text-xs font-semibold text-slate-300 flex items-center gap-1.5 transition-all"
+            title="Download CSV"
+          >
+            <Download className="w-3.5 h-3.5" /> Export CSV
+          </button>
+
+          <button
+            onClick={() => window.print()}
+            className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-1.5 transition-all"
+            title="Print Summary"
+          >
+            <Printer className="w-3.5 h-3.5" /> Print
+          </button>
+
+          <button
+            onClick={fetchHistory}
+            className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-1.5 transition-all"
+          >
+            <RefreshCw className="w-3.5 h-3.5" /> Refresh
+          </button>
+        </div>
       </div>
 
       {/* Filter Controls */}

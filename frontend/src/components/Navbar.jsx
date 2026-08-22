@@ -57,6 +57,17 @@ export default function Navbar() {
             </Link>
 
             <Link
+              to="/solar"
+              className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
+                isActive('/solar')
+                  ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Zap className="w-4 h-4 text-amber-400" /> Solar Offset
+            </Link>
+
+            <Link
               to="/tips"
               className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
                 isActive('/tips')
@@ -182,6 +193,13 @@ export default function Navbar() {
             className="block px-3 py-2 rounded-lg text-slate-200 hover:bg-slate-800"
           >
             CEB Bill Estimator
+          </Link>
+          <Link
+            to="/solar"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-lg text-amber-400 hover:bg-slate-800 font-semibold"
+          >
+            Solar Offset Simulator
           </Link>
           <Link
             to="/tips"
