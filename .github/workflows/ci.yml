@@ -1,0 +1,82 @@
+name: WattWise Continuous Integration CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-test:
+    name: Backend Node.js Integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Verify Backend Server Initialization
+        run: |
+          cd backend
+          node -e "require('./server.js'); console.log('Backend syntax and dependencies verified!'); process.exit(0);"
+
+  frontend-build:
+    name: Frontend React Vite Build Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build Production Assets
+        run: |
+          cd frontend
+          npm run build
+
+  ml-service-sanity:
+    name: Python Flask ML Microservice Sanity
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12 Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install ML Requirements
+        run: |
+          cd ml-services
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Test Flask App Initialization
+        run: |
+          cd ml-services
+          python -c "import app; print('Flask ML microservice initialization sanity test passed!')"

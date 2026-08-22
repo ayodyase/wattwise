@@ -1,5 +1,12 @@
 # Dependencies
 node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# ML Heavy Pickle Models (>100MB GitHub limit)
+*.pkl
 
 # Environment variables
 .env
