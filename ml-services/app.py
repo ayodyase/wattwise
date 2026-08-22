@@ -1,9 +1,16 @@
 import os
 import pickle
+import warnings
 import numpy as np
 import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+
+try:
+    from sklearn.exceptions import InconsistentVersionWarning
+    warnings.filterwarnings('ignore', category=InconsistentVersionWarning)
+except ImportError:
+    warnings.filterwarnings('ignore')
 
 app = Flask(__name__)
 CORS(app)
