@@ -1,0 +1,519 @@
+================================================================================
+          ENERGY CONSUMPTION PREDICTION SYSTEM — FULL PROJECT DETAILS
+          Final Year Project | BSc Software Engineering | ICBT University
+================================================================================
+
+TOPIC NUMBER  : 14
+TOPIC TITLE   : Energy Consumption Prediction System
+DOMAIN        : Environment / Smart Home / Sustainability
+ML ALGORITHM  : Random Forest Regressor
+DIFFICULTY    : Medium
+TECH STACK    : MERN (MongoDB, Express.js, React, Node.js) + Python Flask (ML)
+EXPECTED R²   : 0.88 – 0.93
+
+--------------------------------------------------------------------------------
+1. PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+
+A smart energy monitoring web application where households or building
+managers enter appliance usage details, weather conditions and occupancy
+data to predict energy consumption for the next hour or day (in Wh).
+
+The system provides a full usage breakdown, cost estimation in Sri Lankan
+Rupees using CEB tariff slab rates, anomaly alerts for unusually high usage,
+and personalised energy-saving recommendations based on the predicted level.
+
+Users can log their daily usage patterns and track their energy footprint
+and estimated electricity bill over time — helping reduce costs and
+carbon emissions.
+
+--------------------------------------------------------------------------------
+2. PROBLEM STATEMENT (Use in Proposal)
+--------------------------------------------------------------------------------
+
+Sri Lanka's electricity tariffs increased by 66% in 2023 (Ceylon Electricity
+Board — CEB). Households receive their electricity bill only after the meter
+is read at the end of the month — by which point it is too late to reduce
+usage. There is currently no free, accessible online tool that allows
+Sri Lankan households to predict their energy consumption in advance.
+
+This system uses a Random Forest regression model trained on real household
+sensor data to forecast electricity usage in Wh, and converts the prediction
+into an estimated monthly bill using CEB's residential tariff slabs. Users
+can identify which appliances waste the most energy and take corrective
+action BEFORE the bill arrives — not after.
+
+--------------------------------------------------------------------------------
+3. FEATURES USED IN THE ML MODEL
+--------------------------------------------------------------------------------
+
+  [ NUMERICAL FEATURES ]
+  -----------------------------------------------
+  • Indoor temperature              (°C — multiple rooms)
+  • Indoor humidity                 (%)
+  • Outdoor temperature             (°C)
+  • Outdoor humidity                (%)
+  • Wind speed                      (m/s)
+  • Dew point temperature           (°C)
+  • Number of occupants             (count)
+  • Previous hour energy usage      (Wh — lag feature)
+  • Number of appliances active     (count)
+  • Lights energy usage             (Wh — secondary target)
+
+  [ CATEGORICAL FEATURES ]
+  -----------------------------------------------
+  • Hour of day                     (0–23, binned into categories)
+  • Day of week                     (Monday – Sunday)
+  • Season                          (Summer / Winter / Spring / Fall)
+  • Building type                   (House / Apartment / Office)
+  • Heating or AC system type       (Central / Split / None)
+  • Time of day category            (Morning / Afternoon / Evening / Night)
+  • Holiday                         (Yes / No)
+
+  [ PREDICTION TARGET ]
+  -----------------------------------------------
+  • Appliance energy consumption    : X Wh   (primary — regression)
+  • Lights energy consumption       : X Wh   (secondary target)
+  • Estimated monthly bill          : Rs.    (calculated from prediction)
+  • Usage category                  : Low / Normal / High / Very High
+
+--------------------------------------------------------------------------------
+4. ML ALGORITHM & APPROACH
+--------------------------------------------------------------------------------
+
+  Model 1   : Random Forest Regressor (Primary)
+              → Target: Appliances energy usage (Wh)
+              → Output: Continuous numeric value
+
+  Model 2   : Random Forest Regressor (Secondary)
+              → Target: Lights energy usage (Wh)
+
+  Evaluation Metrics:
+  → MAE  (Mean Absolute Error)
+  → RMSE (Root Mean Squared Error)
+  → R²   (R-squared / Coefficient of Determination)
+
+  Additional Comparison (for extra marks in report):
+  → Also train GradientBoostingRegressor
+  → Show comparison table: RF vs GBR (MAE, RMSE, R²)
+
+  Feature Engineering:
+  → Extract from datetime: Hour, DayOfWeek, Month, IsWeekend
+  → Create TimeOfDay category from hour bins
+  → Create IsHoliday flag
+  → Add lag feature: previous_hour_usage column
+
+  Scaling:
+  → StandardScaler on all numerical features
+
+  Target Transformation:
+  → If Appliances (Wh) distribution is skewed:
+    Apply log transformation: y = log1p(df['Appliances'])
+    Reverse after prediction: np.expm1(y_pred)
+
+--------------------------------------------------------------------------------
+5. ML TRAINING STEPS (Step-by-Step)
+--------------------------------------------------------------------------------
+
+  Step 1 : Load Dataset
+           import pandas as pd
+           df = pd.read_csv('energydata_complete.csv')
+           df['date'] = pd.to_datetime(df['date'])
+           df.set_index('date', inplace=True)
+           print(df.shape)   # (19735, 29)
+
+  Step 2 : Exploratory Data Analysis (EDA)
+           - Histogram: Appliances (Wh) distribution
+           - Line plot: hourly usage over 4.5 months
+           - Heatmap: correlation of all features
+           - Box plot: usage by hour of day
+           - Bar chart: average usage by day of week
+
+  Step 3 : Feature Engineering
+           df['Hour']       = df.index.hour
+           df['DayOfWeek']  = df.index.dayofweek
+           df['Month']      = df.index.month
+           df['IsWeekend']  = (df['DayOfWeek'] >= 5).astype(int)
+
+           # Lag feature (previous hour usage)
+           df['prev_hour_usage'] = df['Appliances'].shift(1)
+           df.dropna(inplace=True)
+
+           # Time of day category
+           def time_category(hour):
+               if 6  <= hour < 12: return 'Morning'
+               elif 12 <= hour < 17: return 'Afternoon'
+               elif 17 <= hour < 21: return 'Evening'
+               else: return 'Night'
+           df['TimeOfDay'] = df['Hour'].apply(time_category)
+
+  Step 4 : Drop Irrelevant Columns
+           df.drop(['rv1', 'rv2'], axis=1, inplace=True)
+           # rv1 and rv2 are random variables in the dataset — remove them
+
+  Step 5 : Encode Categorical Features
+           from sklearn.preprocessing import LabelEncoder
+           le = LabelEncoder()
+           df['TimeOfDay'] = le.fit_transform(df['TimeOfDay'])
+
+  Step 6 : Scale Numerical Features
+           from sklearn.preprocessing import StandardScaler
+           scaler = StandardScaler()
+           X = df.drop(['Appliances', 'lights'], axis=1)
+           X_scaled = scaler.fit_transform(X)
+
+  Step 7 : Train/Test Split
+           from sklearn.model_selection import train_test_split
+           y = df['Appliances']
+           X_train, X_test, y_train, y_test = train_test_split(
+               X_scaled, y, test_size=0.2, random_state=42)
+
+  Step 8 : Train Random Forest Regressor
+           from sklearn.ensemble import RandomForestRegressor
+           reg = RandomForestRegressor(n_estimators=150,
+                                       random_state=42,
+                                       n_jobs=-1)
+           reg.fit(X_train, y_train)
+
+  Step 9 : Evaluate the Model
+           from sklearn.metrics import mean_absolute_error
+           from sklearn.metrics import mean_squared_error, r2_score
+           import numpy as np
+
+           y_pred = reg.predict(X_test)
+           print('MAE: ',  mean_absolute_error(y_test, y_pred))
+           print('RMSE: ', np.sqrt(mean_squared_error(y_test, y_pred)))
+           print('R²: ',   r2_score(y_test, y_pred))
+
+           # Plot predicted vs actual
+           import matplotlib.pyplot as plt
+           plt.scatter(y_test, y_pred, alpha=0.3)
+           plt.xlabel('Actual'); plt.ylabel('Predicted')
+           plt.title('Actual vs Predicted Energy Usage')
+           plt.show()
+
+  Step 10: Feature Importance
+           importances = reg.feature_importances_
+           # Prev_hour_usage and indoor temperature will dominate
+           # Show top 10 features bar chart in your project report
+
+  Step 11: Compare with Gradient Boosting (for extra marks)
+           from sklearn.ensemble import GradientBoostingRegressor
+           gbr = GradientBoostingRegressor(n_estimators=150, random_state=42)
+           gbr.fit(X_train, y_train)
+           # Show comparison table in report
+
+  Step 12: Save Models
+           import pickle
+           pickle.dump(reg,    open('energy_rf_model.pkl', 'wb'))
+           pickle.dump(scaler, open('energy_scaler.pkl',   'wb'))
+           # Load in Flask:
+           reg = pickle.load(open('energy_rf_model.pkl', 'rb'))
+
+--------------------------------------------------------------------------------
+6. KAGGLE DATASETS
+--------------------------------------------------------------------------------
+
+  DATASET 1 (PRIMARY — RECOMMENDED):
+  Name    : Appliances Energy Prediction Dataset
+  Records : 19,735 records
+  Features: 29 columns
+  Interval: 10-minute readings over 4.5 months
+  Includes: Temperature and humidity from 9 rooms + outdoor weather station
+  Quality : Clean, no missing values, real sensor data from a house in Belgium
+  URL     : kaggle.com/datasets/loveall/appliances-energy-prediction
+  Why use : Perfect size for beginners, clean, well-documented
+
+  DATASET 2 (LARGE SCALE):
+  Name    : Individual Household Electric Power Consumption (UCI)
+  Records : 2 million+ minute-level records over 4 years
+  Features: Global active power, voltage, current intensity, sub-metering
+  URL     : kaggle.com/datasets/uciml/electric-power-consumption-data-set
+  Why use : Huge dataset — use a sample of 50,000 rows for training
+            Better for time-series analysis section of your report
+
+  DATASET 3 (COMBINED WEATHER):
+  Name    : Smart Home Dataset with Weather Information
+  Records : ~500,000 records
+  Features: Energy readings + local weather (temperature, humidity, wind)
+  URL     : kaggle.com/datasets/taranvee/smart-home-dataset-with-weather-information
+  Why use : Combined dataset — no need to manually merge weather data
+
+  -----------------------------------------------------------------------
+  NOTE ON SRI LANKA SPECIFIC CONTEXT:
+  -----------------------------------------------------------------------
+  There is no dedicated Sri Lanka household energy dataset publicly available.
+  However, you can enhance your project proposal with local context:
+
+  CEB TARIFF SLABS (2024 — Residential):
+  • 0   – 30  units  : Rs.  2.50 per unit
+  • 31  – 60  units  : Rs.  4.85 per unit
+  • 61  – 90  units  : Rs.  7.85 per unit
+  • 91  – 120 units  : Rs. 10.00 per unit
+  • 121 – 180 units  : Rs. 27.75 per unit
+  • 181+      units  : Rs. 45.00 per unit
+
+  Use these slab rates in your Bill Estimator page to convert predicted
+  Wh values into estimated monthly bills in Sri Lankan Rupees. This makes
+  your project 100% locally relevant and unique.
+
+--------------------------------------------------------------------------------
+7. COMPARABLE WEBSITES & WEAK POINTS
+--------------------------------------------------------------------------------
+
+  WEBSITE 1: Ceylon Electricity Board (ceb.lk)
+  -------------------------------------------------
+  What it does  : Monthly electricity billing for Sri Lankan consumers
+  Weak point    : No bill prediction tool at all. Users see their bill
+                  only after meter reading at month end. No usage analytics,
+                  no forecasting feature, no mobile-friendly interface.
+  Your advantage: First Sri Lankan energy consumption predictor for
+                  households — with bill estimation using CEB tariff slabs.
+
+  WEBSITE 2: Google Nest / Smart Thermostat (nest.com)
+  -------------------------------------------------
+  What it does  : Smart home energy monitoring via hardware thermostat device
+  Weak point    : Requires expensive hardware ($250+ device). Not sold or
+                  supported in Sri Lanka. Software-only solution not available.
+                  Data locked inside device ecosystem.
+  Your advantage: Free web-based tool — no hardware required. Just enter
+                  your usage data manually and get instant prediction.
+
+  WEBSITE 3: EnergyStar.gov (US Government Tool)
+  -------------------------------------------------
+  What it does  : Static calculators for appliance energy rating (US-focused)
+  Weak point    : US-only focus. No ML model. No personalised prediction
+                  based on real usage patterns. Static lookup tables only.
+  Your advantage: ML-based, real-time, fully adaptable to Sri Lanka's
+                  local electricity tariff rates and tropical climate data.
+
+  WEBSITE 4: Sense Energy Monitor (sense.com)
+  -------------------------------------------------
+  What it does  : AI-powered home energy monitoring via hardware device
+  Weak point    : Hardware device required ($299 USD). No standalone web
+                  prediction available. Not available or shipped to Sri Lanka.
+  Your advantage: 100% software solution, free, accessible from any browser
+                  without any hardware device installation.
+
+--------------------------------------------------------------------------------
+8. REACT PAGES TO BUILD (MERN Frontend)
+--------------------------------------------------------------------------------
+
+  Page 1 : Home / Landing Page
+           - Sri Lanka energy statistics (CEB tariff increase 66%)
+           - "How it works" section (3 steps)
+           - CTA: "Predict My Energy Usage"
+
+  Page 2 : Consumption Predictor (Main Feature)
+           - Form fields:
+               * Indoor temperature (°C)
+               * Number of occupants
+               * Appliances currently active (checkboxes)
+               * Outdoor weather condition
+               * Hour of day (auto-detected)
+               * Day of week (auto-detected)
+           - Submit → Flask ML API call
+           - Result shows:
+               * Predicted Wh (this hour)
+               * Usage category badge (Low / Normal / High / Very High)
+               * Estimated daily cost (Rs.)
+               * Estimated monthly bill (Rs.) using CEB slabs
+
+  Page 3 : Usage Analytics Dashboard
+           - Line chart: predicted usage trend over time
+           - Pie chart: appliance energy breakdown
+           - Bar chart: average usage by day of week
+           - Bar chart: usage by hour of day
+
+  Page 4 : Energy Saving Tips Page
+           - Dynamic tips displayed based on predicted usage level
+           - If "High" → show AC, refrigerator, water heater saving tips
+           - If "Normal" → show general efficiency tips
+           - Tips stored in MongoDB and fetched via API
+
+  Page 5 : Bill Estimator
+           - User enters estimated monthly kWh usage
+           - System calculates CEB bill using residential tariff slabs
+           - Shows breakdown by slab with total bill in Rs.
+           - "How to reduce your bill" suggestions
+
+  Page 6 : Prediction History + User Profile
+           - Table of past predictions saved in MongoDB
+           - Monthly usage trend chart
+           - User auth: Register / Login (JWT)
+
+--------------------------------------------------------------------------------
+9. FULL SYSTEM ARCHITECTURE
+--------------------------------------------------------------------------------
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │                    FRONTEND (React.js)                      │
+  │  Pages: Home | Predictor | Analytics | Tips | Bill | Auth  │
+  └──────────────────────┬──────────────────────────────────────┘
+                         │ Axios HTTP Requests
+                         ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │              BACKEND API (Node.js + Express.js)             │
+  │  Routes: /api/predict  /api/history  /api/auth  /api/tips   │
+  └──────────┬──────────────────────────┬───────────────────────┘
+             │                          │
+             ▼                          ▼
+  ┌─────────────────┐        ┌───────────────────────┐
+  │   MongoDB        │        │  Python Flask API     │
+  │  Collections:    │        │  (ML Microservice)    │
+  │  - users         │        │                       │
+  │  - predictions   │        │  Endpoint:            │
+  │  - tips          │        │  POST /predict        │
+  └─────────────────┘        │                       │
+                              │  Loads:               │
+                              │  energy_rf_model.pkl  │
+                              │  energy_scaler.pkl    │
+                              └───────────────────────┘
+
+--------------------------------------------------------------------------------
+10. MONGODB SCHEMA DESIGN
+--------------------------------------------------------------------------------
+
+  Collection: users
+  {
+    _id        : ObjectId,
+    name       : String,
+    email      : String (unique),
+    password   : String (bcrypt hashed),
+    createdAt  : Date
+  }
+
+  Collection: predictions
+  {
+    _id               : ObjectId,
+    userId            : ObjectId (ref: users),
+    indoorTemp        : Number,
+    outdoorTemp       : Number,
+    humidity          : Number,
+    occupants         : Number,
+    appliancesActive  : Number,
+    hour              : Number,
+    dayOfWeek         : String,
+    predictedWh       : Number,
+    usageCategory     : String,
+    estimatedCost     : Number,
+    createdAt         : Date
+  }
+
+  Collection: tips
+  {
+    _id          : ObjectId,
+    usageLevel   : String,   // Low / Normal / High / Very High
+    appliance    : String,   // AC / Fridge / Lights / etc.
+    title        : String,
+    content      : String
+  }
+
+--------------------------------------------------------------------------------
+11. EXPECTED PROJECT METRICS
+--------------------------------------------------------------------------------
+
+  ML Model R² Score         : 0.88 – 0.93
+  ML Model MAE              : ~40–60 Wh
+  Dataset Size              : 19,735 rows
+  Number of Features        : 27 (after engineering)
+  Number of ML Models       : 2 (RF Regressor + GBR comparison)
+  Number of React Pages     : 6
+  Number of API Endpoints   : ~7
+  Project Difficulty        : Medium
+
+--------------------------------------------------------------------------------
+12. SUGGESTED TOOLS & LIBRARIES
+--------------------------------------------------------------------------------
+
+  FRONTEND (React):
+  - axios              : API calls to Node.js backend
+  - react-router-dom   : Page routing
+  - recharts           : Line, bar, pie, area charts
+  - react-hook-form    : Form handling
+  - tailwindcss        : Styling and responsive layout
+
+  BACKEND (Node.js + Express):
+  - express            : REST API framework
+  - mongoose           : MongoDB ODM
+  - bcryptjs           : Password hashing
+  - jsonwebtoken       : JWT authentication
+  - axios              : Forward requests to Flask ML service
+  - cors               : Cross-origin requests
+  - dotenv             : Environment variables
+
+  PYTHON (Flask + ML):
+  - flask              : ML microservice server
+  - flask-cors         : Allow Node.js requests
+  - pandas             : Data loading and manipulation
+  - numpy              : Numerical operations
+  - scikit-learn       : RandomForestRegressor, GradientBoosting, scaler
+  - matplotlib         : EDA and evaluation visualisations
+  - seaborn            : Correlation heatmaps
+  - pickle             : Save and load models
+
+  DATABASE:
+  - MongoDB Atlas      : Free cloud MongoDB (512MB free tier)
+
+--------------------------------------------------------------------------------
+13. PROJECT PROPOSAL OUTLINE SUGGESTION
+--------------------------------------------------------------------------------
+
+  Chapter 1 : Introduction
+    1.1 Background — Sri Lanka Energy Crisis Context
+    1.2 Problem Statement (CEB tariff increase, no prediction tool)
+    1.3 Objectives of the System
+    1.4 Scope and Limitations
+    1.5 Significance of the Study
+
+  Chapter 2 : Literature Review / Comparable Systems
+    2.1 CEB Website — Analysis & Weak Points
+    2.2 Google Nest — Analysis & Weak Points
+    2.3 EnergyStar.gov — Analysis & Weak Points
+    2.4 Sense Energy Monitor — Analysis & Weak Points
+    2.5 Research Gap & Justification
+
+  Chapter 3 : System Design
+    3.1 System Architecture Diagram
+    3.2 Use Case Diagram
+    3.3 MongoDB Schema / ER Diagram
+    3.4 Data Flow Diagram
+    3.5 UI Wireframes
+
+  Chapter 4 : Machine Learning Model
+    4.1 Dataset Description (Appliances Energy Prediction)
+    4.2 Data Preprocessing & Feature Engineering
+    4.3 Model Selection — Why Random Forest Regressor?
+    4.4 Model Training & Validation
+    4.5 Comparison: Random Forest vs Gradient Boosting
+    4.6 Results — MAE, RMSE, R² Score
+    4.7 Feature Importance Analysis
+
+  Chapter 5 : Implementation
+    5.1 Frontend — React.js (6 pages)
+    5.2 Backend — Node.js + Express.js
+    5.3 Database — MongoDB (3 collections)
+    5.4 ML Microservice — Python Flask
+
+  Chapter 6 : Testing
+    6.1 Unit Testing
+    6.2 Integration Testing
+    6.3 User Acceptance Testing
+
+  Chapter 7 : Conclusion & Future Work
+    7.1 Summary
+    7.2 Limitations
+    7.3 Future Enhancements:
+        - Integrate smart meter API for automatic data input
+        - Solar panel energy offset calculator
+        - Real-time CEB API integration for live tariff rates
+        - Mobile app for daily usage logging
+
+================================================================================
+                END OF DOCUMENT — ENERGY CONSUMPTION PREDICTION SYSTEM
+================================================================================
+  Prepared for  : BSc Software Engineering Final Year Project
+  University    : ICBT Campus, Sri Lanka
+  Stack         : MERN + Python Flask + Random Forest Regressor
+  Dataset       : Kaggle — Appliances Energy Prediction Dataset (19,735 rows)
+================================================================================

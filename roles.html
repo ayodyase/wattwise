@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Energy System – User Roles</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f8fafc;color:#1e293b;padding:16px}
+h1{font-size:17px;font-weight:600;margin-bottom:4px}
+.sub{font-size:12px;color:#64748b;margin-bottom:16px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tab{padding:8px 14px;border-radius:10px;border:2px solid transparent;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;display:flex;align-items:center;gap:5px}
+.tab-u{background:#EFF6FF;border-color:#3B82F6;color:#1D4ED8}
+.tab-u.active{background:#3B82F6;color:#fff}
+.tab-a{background:#FFF7ED;border-color:#F97316;color:#C2410C}
+.tab-a.active{background:#F97316;color:#fff}
+.tab-e{background:#F0FDF4;border-color:#22C55E;color:#15803D}
+.tab-e.active{background:#22C55E;color:#fff}
+.tab-b{background:#FDF4FF;border-color:#A855F7;color:#7E22CE}
+.tab-b.active{background:#A855F7;color:#fff}
+.page{display:none}.page.active{display:block}
+.rhead{border-radius:14px;padding:16px;margin-bottom:14px}
+.rhead-u{background:linear-gradient(135deg,#DBEAFE,#EFF6FF)}
+.rhead-a{background:linear-gradient(135deg,#FFEDD5,#FFF7ED)}
+.rhead-e{background:linear-gradient(135deg,#DCFCE7,#F0FDF4)}
+.rhead-b{background:linear-gradient(135deg,#F3E8FF,#FDF4FF)}
+.rtitle{font-size:16px;font-weight:600;margin-bottom:3px}
+.rsub{font-size:11px;opacity:.7;margin-bottom:8px}
+.rdesc{font-size:12px;line-height:1.7;opacity:.85}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.tag{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:500}
+.sec-title{font-size:10px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 7px;padding-bottom:4px;border-bottom:1px solid #e2e8f0}
+.fn{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:6px;background:#fff;overflow:hidden}
+.fn-top{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer}
+.fn-icon{font-size:15px;min-width:22px}
+.fn-name{font-size:12px;font-weight:500;flex:1;color:#1e293b}
+.fn-badge{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:500}
+.arr{font-size:9px;color:#94a3b8;transition:transform .2s}
+.fn.open .arr{transform:rotate(180deg)}
+.fn-body{display:none;padding:0 12px 12px;border-top:1px solid #f1f5f9}
+.fn-desc{font-size:11px;color:#475569;line-height:1.7;margin:8px 0 6px}
+.step{display:flex;gap:7px;margin-bottom:5px;align-items:flex-start}
+.snum{min-width:18px;height:18px;border-radius:50%;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#64748b;flex-shrink:0;margin-top:1px}
+.stext{font-size:11px;color:#475569;line-height:1.5}
+.stext strong{color:#1e293b}
+.fn.open .fn-body{display:block}
+.pages-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.pp{font-size:11px;padding:3px 9px;border-radius:7px}
+.pp.y{background:#DCFCE7;color:#15803D}
+.pp.n{background:#FEE2E2;color:#B91C1C}
+.role-summary{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.rs-card{border-radius:10px;padding:10px;text-align:center;border:2px solid transparent;cursor:pointer;transition:all .15s}
+.rs-card:hover{transform:translateY(-2px)}
+.rs-icon{font-size:22px;margin-bottom:4px}
+.rs-name{font-size:11px;font-weight:600}
+.rs-count{font-size:10px;opacity:.7;margin-top:2px}
+</style>
+</head>
+<body>
+<h1>⚡ Energy Consumption Prediction System</h1>
+<p class="sub">User Roles & Functions — BSc Final Year Project | ICBT University</p>
+
+<div class="role-summary">
+  <div class="rs-card" style="background:#EFF6FF;border-color:#3B82F6" onclick="show('ru',document.querySelectorAll('.tab')[0])">
+    <div class="rs-icon">👤</div>
+    <div class="rs-name" style="color:#1D4ED8">Regular User</div>
+    <div class="rs-count" style="color:#1D4ED8">7 functions</div>
+  </div>
+  <div class="rs-card" style="background:#FFF7ED;border-color:#F97316" onclick="show('ra',document.querySelectorAll('.tab')[1])">
+    <div class="rs-icon">⚙️</div>
+    <div class="rs-name" style="color:#C2410C">Admin</div>
+    <div class="rs-count" style="color:#C2410C">8 functions</div>
+  </div>
+  <div class="rs-card" style="background:#F0FDF4;border-color:#22C55E" onclick="show('re',document.querySelectorAll('.tab')[2])">
+    <div class="rs-icon">⚡</div>
+    <div class="rs-name" style="color:#15803D">Energy Analyst</div>
+    <div class="rs-count" style="color:#15803D">5 functions</div>
+  </div>
+  <div class="rs-card" style="background:#FDF4FF;border-color:#A855F7" onclick="show('rb',document.querySelectorAll('.tab')[3])">
+    <div class="rs-icon">🏢</div>
+    <div class="rs-name" style="color:#7E22CE">Building Manager</div>
+    <div class="rs-count" style="color:#7E22CE">6 functions</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab tab-u active" onclick="show('ru',this)">👤 Regular User</button>
+  <button class="tab tab-a" onclick="show('ra',this)">⚙️ Admin</button>
+  <button class="tab tab-e" onclick="show('re',this)">⚡ Energy Analyst</button>
+  <button class="tab tab-b" onclick="show('rb',this)">🏢 Building Manager</button>
+</div>
+
+<!-- REGULAR USER -->
+<div id="ru" class="page active">
+  <div class="rhead rhead-u">
+    <div class="rtitle" style="color:#1D4ED8">👤 Role 1 — Regular User (Household Member)</div>
+    <div class="rsub" style="color:#1D4ED8">The primary end-user — any household member who wants to predict and manage their electricity usage</div>
+    <div class="rdesc" style="color:#1D4ED8">A Regular User is any person who registers on the system to predict their household energy consumption, estimate their monthly electricity bill, and get energy-saving tips. This is the most common role. They can only view and manage their own personal data and predictions — they cannot access other users' data or any admin features.</div>
+    <div class="tags">
+      <span class="tag" style="background:#BFDBFE;color:#1D4ED8">Self Registration</span>
+      <span class="tag" style="background:#BFDBFE;color:#1D4ED8">Personal Data Only</span>
+      <span class="tag" style="background:#BFDBFE;color:#1D4ED8">Most Common Role</span>
+      <span class="tag" style="background:#BFDBFE;color:#1D4ED8">No Admin Access</span>
+    </div>
+  </div>
+
+  <div class="sec-title">Core Functions</div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📝</span>
+      <span class="fn-name">Register & Login to Personal Account</span>
+      <span class="fn-badge" style="background:#DBEAFE;color:#1D4ED8">Auth</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Users self-register using their name, email and password. The system creates a secure account linked to all their future predictions and usage history. Passwords are hashed using bcrypt before storing in MongoDB.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Register Page</strong> — enter full name, email and password</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">System checks for <strong>duplicate email</strong> and validates format</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Password is <strong>hashed with bcrypt</strong> and stored securely in MongoDB</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">User is automatically logged in and receives a <strong>JWT token</strong> (7-day expiry)</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Redirected to their <strong>personal dashboard</strong></div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">⚡</span>
+      <span class="fn-name">Predict Energy Consumption</span>
+      <span class="fn-badge" style="background:#DBEAFE;color:#1D4ED8">Core ML</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">The main feature. The user enters current household conditions (temperature, active appliances, occupants) and the Random Forest ML model returns a predicted energy usage in Wh for the current hour.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Open <strong>Consumption Predictor page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Enter: <strong>indoor temperature, number of occupants, appliances active, outdoor weather, time of day</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Click <strong>Predict</strong> — React sends data to Node.js API → Flask ML microservice</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Flask runs <strong>Random Forest Regressor</strong> and returns predicted Wh value</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Result card shows: <strong>predicted Wh, usage category badge (Low/Normal/High/Very High), estimated hourly cost in Rs.</strong></div></div>
+      <div class="step"><div class="snum">6</div><div class="stext">Prediction is <strong>saved to MongoDB</strong> under the user's account for history tracking</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🧾</span>
+      <span class="fn-name">Estimate Monthly Electricity Bill</span>
+      <span class="fn-badge" style="background:#DBEAFE;color:#1D4ED8">Bill</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Users enter their estimated monthly total kWh usage and the system calculates their expected CEB electricity bill using Sri Lanka's residential tariff slabs — showing a full breakdown by slab.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Bill Estimator page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Enter estimated <strong>total monthly usage in kWh</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">System applies <strong>CEB residential tariff slabs</strong> (0–30 units, 31–60, 61–90, etc.)</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Shows <strong>per-slab cost breakdown</strong> and total bill in Rs.</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Displays <strong>"How to reduce your bill"</strong> tips based on usage level</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📊</span>
+      <span class="fn-name">View Personal Usage Analytics Dashboard</span>
+      <span class="fn-badge" style="background:#DBEAFE;color:#1D4ED8">Analytics</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Users can view charts and trends based on their own saved predictions — helping them understand when and how they use the most energy in their household.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Line chart: <strong>predicted usage trend</strong> over the past 7 / 30 days</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Bar chart: <strong>average usage by day of week</strong> (which day uses most energy)</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Bar chart: <strong>average usage by hour of day</strong> (morning vs evening peaks)</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Summary card: <strong>estimated monthly bill</strong> based on logged predictions</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📜</span>
+      <span class="fn-name">View & Manage Prediction History</span>
+      <span class="fn-badge" style="background:#DBEAFE;color:#1D4ED8">History</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">All past predictions are saved in MongoDB and listed in a history table. Users can view, filter and delete their own past records.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Navigate to <strong>Prediction History page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Table shows: <strong>date/time, inputs used, predicted Wh, usage category, cost estimate</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Filter by <strong>date range or usage category</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Delete individual records or <strong>clear all history</strong></div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">💡</span>
+      <span class="fn-name">View Personalised Energy Saving Tips</span>
+      <span class="fn-badge" style="background:#DBEAFE;color:#1D4ED8">Tips</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">After each prediction, the system shows tailored energy-saving tips based on the predicted usage category. If "Very High" is predicted, it shows tips targeting AC units, water heaters and refrigerators specifically.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Tips are <strong>automatically shown</strong> after each prediction based on usage category</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">User can also browse the <strong>full Tips Library page</strong> by appliance category</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Tips are stored in <strong>MongoDB tips collection</strong> and managed by Admin</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">✏️</span>
+      <span class="fn-name">Edit Profile & Manage Account</span>
+      <span class="fn-badge" style="background:#DBEAFE;color:#1D4ED8">Profile</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Users can update their personal details, change their password, or permanently delete their account and all associated data from the system.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Edit <strong>name and email</strong> from Profile settings page</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext"><strong>Change password</strong> after verifying current password</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext"><strong>Delete account</strong> — permanently removes user + all predictions from MongoDB</div></div>
+    </div>
+  </div>
+
+  <div class="sec-title">Pages Accessible</div>
+  <div class="pages-row">
+    <span class="pp y">✅ Home</span><span class="pp y">✅ Register / Login</span>
+    <span class="pp y">✅ Predictor</span><span class="pp y">✅ Bill Estimator</span>
+    <span class="pp y">✅ My Analytics</span><span class="pp y">✅ Prediction History</span>
+    <span class="pp y">✅ Tips Library</span><span class="pp y">✅ My Profile</span>
+    <span class="pp n">❌ Admin Panel</span><span class="pp n">❌ All Users Data</span>
+    <span class="pp n">❌ System Analytics</span><span class="pp n">❌ ML Model Management</span>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="ra" class="page">
+  <div class="rhead rhead-a">
+    <div class="rtitle" style="color:#C2410C">⚙️ Role 2 — System Administrator</div>
+    <div class="rsub" style="color:#C2410C">Full system control — manages users, content, ML model and system performance</div>
+    <div class="rdesc" style="color:#C2410C">The Administrator has complete control over the entire system. They manage all user accounts and roles, manage energy tips content, monitor system-wide analytics, handle ML model performance, and maintain overall system security. Typically only 1–2 Admin accounts exist, created directly in the database during initial system setup.</div>
+    <div class="tags">
+      <span class="tag" style="background:#FED7AA;color:#C2410C">Full Access</span>
+      <span class="tag" style="background:#FED7AA;color:#C2410C">User Management</span>
+      <span class="tag" style="background:#FED7AA;color:#C2410C">Content Management</span>
+      <span class="tag" style="background:#FED7AA;color:#C2410C">ML Model Control</span>
+      <span class="tag" style="background:#FED7AA;color:#C2410C">System Analytics</span>
+    </div>
+  </div>
+
+  <div class="sec-title">Core Functions</div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">👥</span>
+      <span class="fn-name">Manage All User Accounts</span>
+      <span class="fn-badge" style="background:#FFEDD5;color:#C2410C">User Mgmt</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Admin can view all registered users in the system, search and filter by various criteria, edit user details, change roles, suspend accounts or permanently delete users.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Access <strong>User Management page</strong> in Admin Panel</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">View table of all users: <strong>name, email, role, registration date, total predictions made</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext"><strong>Search / filter</strong> users by name, email, role or registration date</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext"><strong>Edit</strong> any user's name, email or assigned role</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext"><strong>Suspend</strong> a user account — blocks login without deleting their data</div></div>
+      <div class="step"><div class="snum">6</div><div class="stext"><strong>Permanently delete</strong> a user and all their predictions from MongoDB</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🔑</span>
+      <span class="fn-name">Assign & Manage User Roles</span>
+      <span class="fn-badge" style="background:#FFEDD5;color:#C2410C">Roles</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Admin controls which role each user is assigned. When an Energy Analyst or Building Manager requests elevated access, Admin reviews and approves or rejects the request.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">User submits a <strong>role upgrade request</strong> with their reason</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Admin sees a <strong>pending requests notification</strong> in the Admin Panel</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Admin reviews the request and clicks <strong>Approve or Reject</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">If approved, <strong>user's role field in MongoDB is updated</strong> immediately</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Admin can also <strong>manually change any user's role</strong> at any time</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">💡</span>
+      <span class="fn-name">Manage Energy Saving Tips Content</span>
+      <span class="fn-badge" style="background:#FFEDD5;color:#C2410C">Content</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Admin creates, edits and deletes energy-saving tip articles in the tips library. Tips are tagged by appliance type and usage level so users see relevant advice after each prediction.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Access <strong>Content Management page</strong> in Admin Panel</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext"><strong>Add new tip</strong>: enter title, content body, usage level tag (Low/High etc.), appliance tag (AC/Fridge/Lights)</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext"><strong>Edit existing tips</strong> to update outdated energy advice</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext"><strong>Delete tips</strong> no longer relevant</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">All tips stored in <strong>MongoDB tips collection</strong> and fetched dynamically by React frontend</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📊</span>
+      <span class="fn-name">View Full System-Wide Analytics</span>
+      <span class="fn-badge" style="background:#FFEDD5;color:#C2410C">Analytics</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Admin has access to a complete analytics dashboard showing platform-wide statistics — total users, total predictions, most common usage categories, peak usage hours, and new registration trends.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Summary cards: <strong>Total Users / Total Predictions / Active Today / Avg Predicted Wh</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Line chart: <strong>new user registrations</strong> over time (daily / weekly / monthly)</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Bar chart: <strong>total predictions submitted</strong> per day over the past month</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Donut chart: <strong>usage category distribution</strong> across all predictions (Low/Normal/High/Very High)</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Bar chart: <strong>peak prediction hours</strong> — what time of day users check their usage most</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🤖</span>
+      <span class="fn-name">Monitor & Update ML Model</span>
+      <span class="fn-badge" style="background:#FFEDD5;color:#C2410C">ML Control</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Admin can view current ML model performance metrics and trigger a retraining workflow when new data is available or if prediction accuracy degrades over time.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Access <strong>ML Model Management page</strong> in Admin Panel</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">View: <strong>model version, training date, dataset size, R² score, MAE, RMSE</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">View <strong>recent prediction distribution chart</strong> to detect model drift</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Click <strong>Retrain Model</strong> — triggers Flask API to retrain on latest dataset</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">New <strong>.pkl model file</strong> replaces old one after retraining is complete</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🔒</span>
+      <span class="fn-name">View Audit Logs & Security Events</span>
+      <span class="fn-badge" style="background:#FFEDD5;color:#C2410C">Security</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Admin can view a log of all significant system events — logins, role changes, data exports and model updates — for security monitoring and accountability.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Access <strong>Audit Log page</strong> — lists all events with timestamp, user and action type</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Filter logs by: <strong>action type, specific user, date range</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Detect suspicious activity: <strong>multiple failed logins, mass data exports</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Every <strong>role change, ML model update and account deletion</strong> is automatically logged</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📢</span>
+      <span class="fn-name">Send System Announcements to Users</span>
+      <span class="fn-badge" style="background:#FFEDD5;color:#C2410C">Comms</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Admin can post system-wide announcements (e.g. scheduled maintenance, new features, CEB tariff updates) that appear as notification banners for all users when they log in.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Announcements page</strong> in Admin Panel</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Create announcement: <strong>title, message body, expiry date</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Saved to <strong>MongoDB announcements collection</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">All users see the <strong>announcement banner</strong> on their dashboard until expiry date</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📤</span>
+      <span class="fn-name">Export System Data Reports</span>
+      <span class="fn-badge" style="background:#FFEDD5;color:#C2410C">Export</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Admin can export full system data reports — anonymised prediction records, user registration statistics — as CSV files for external reporting or analysis.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Data Export section</strong> in Admin Panel</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Choose export type: <strong>All Predictions / User Stats / Tips Usage</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Select <strong>date range filter</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Download as <strong>CSV file</strong> — PII (names, emails) stripped from prediction exports</div></div>
+    </div>
+  </div>
+
+  <div class="sec-title">Pages Accessible</div>
+  <div class="pages-row">
+    <span class="pp y">✅ All User Pages</span><span class="pp y">✅ Admin Panel</span>
+    <span class="pp y">✅ User Management</span><span class="pp y">✅ Role Management</span>
+    <span class="pp y">✅ Content Management</span><span class="pp y">✅ System Analytics</span>
+    <span class="pp y">✅ ML Model Management</span><span class="pp y">✅ Audit Logs</span>
+    <span class="pp y">✅ Announcements</span><span class="pp y">✅ Data Export</span>
+    <span class="pp y">✅ All Users' Data</span>
+  </div>
+</div>
+
+<!-- ENERGY ANALYST -->
+<div id="re" class="page">
+  <div class="rhead rhead-e">
+    <div class="rtitle" style="color:#15803D">⚡ Role 3 — Energy Analyst (Recommended Additional Role)</div>
+    <div class="rsub" style="color:#15803D">A verified professional who analyses energy data across multiple households or zones</div>
+    <div class="rdesc" style="color:#15803D">An Energy Analyst is a professional (e.g. a utility company employee, environmental consultant, or government energy officer) approved by the Admin to view anonymised aggregate energy usage data across the platform. They can run bulk predictions, analyse trends across regions or building types, and generate official energy consumption reports. They cannot see individual user personal details.</div>
+    <div class="tags">
+      <span class="tag" style="background:#BBF7D0;color:#15803D">Admin Approved</span>
+      <span class="tag" style="background:#BBF7D0;color:#15803D">Anonymised Data</span>
+      <span class="tag" style="background:#BBF7D0;color:#15803D">Bulk Predictions</span>
+      <span class="tag" style="background:#BBF7D0;color:#15803D">Report Generation</span>
+    </div>
+  </div>
+
+  <div class="sec-title">Core Functions</div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📈</span>
+      <span class="fn-name">View Aggregate Energy Analytics Dashboard</span>
+      <span class="fn-badge" style="background:#DCFCE7;color:#15803D">Analytics</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Energy Analysts can access a system-wide analytics dashboard showing aggregate, anonymised energy usage patterns across all users — grouped by building type, region, time of day and season. No individual user data is visible.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Login and access <strong>Analyst Dashboard</strong> (separate from regular user dashboard)</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">View <strong>average predicted Wh by building type</strong> (House / Apartment / Office)</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">View <strong>peak energy hours</strong> across all users (line chart by hour of day)</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">View <strong>seasonal consumption trends</strong> (summer vs winter average usage)</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">All data shown as <strong>group statistics only</strong> — no personal data exposed</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📤</span>
+      <span class="fn-name">Upload Bulk Prediction CSV</span>
+      <span class="fn-badge" style="background:#DCFCE7;color:#15803D">Bulk ML</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Energy Analysts can upload a CSV file containing multiple households' or zones' energy input data, and the system runs the ML model on all rows at once — returning a batch of predictions.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Bulk Prediction page</strong> (not available to Regular Users)</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext"><strong>Upload CSV file</strong> with multiple rows of input data (temperature, appliances, occupants etc.)</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">System sends CSV to <strong>Flask ML API</strong> which runs prediction on all rows</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Results table shows <strong>predicted Wh for each row</strong></div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Download results as <strong>output CSV</strong> with predictions appended</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📄</span>
+      <span class="fn-name">Generate Official Energy Consumption Reports</span>
+      <span class="fn-badge" style="background:#DCFCE7;color:#15803D">Reports</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Analysts can generate formatted PDF or CSV reports summarising energy consumption trends for a given time period — useful for submitting to government bodies or utility companies.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Report Generator page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Select report type: <strong>Daily Summary / Monthly Trend / Building Type Comparison</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Set <strong>date range</strong> and optional filters</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Download as <strong>PDF or CSV</strong></div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🔎</span>
+      <span class="fn-name">Filter & Query Anonymised Dataset</span>
+      <span class="fn-badge" style="background:#DCFCE7;color:#15803D">Query</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Analysts can apply filters to the anonymised dataset to view targeted statistics — e.g. average usage of apartment buildings during evening hours in winter.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Use <strong>filter panel</strong> on Analyst Dashboard</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Filter by: <strong>building type, hour range, day of week, season, usage category</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Dashboard charts <strong>update dynamically</strong> based on active filters</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Filtered results can be <strong>exported as CSV</strong> for external analysis</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🌍</span>
+      <span class="fn-name">Compare Energy Consumption Across Building Types</span>
+      <span class="fn-badge" style="background:#DCFCE7;color:#15803D">Compare</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Analysts can compare average predicted energy consumption across different building types and occupancy levels — helping identify which building categories consume the most energy and why.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Comparison page</strong> on Analyst Dashboard</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Select <strong>two or more building types</strong> to compare</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Grouped bar chart shows <strong>average Wh per building type</strong> across times of day</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Identify which building type and time combination has <strong>highest energy waste</strong></div></div>
+    </div>
+  </div>
+
+  <div class="sec-title">Pages Accessible</div>
+  <div class="pages-row">
+    <span class="pp y">✅ Home</span><span class="pp y">✅ Predictor</span>
+    <span class="pp y">✅ Analyst Dashboard</span><span class="pp y">✅ Bulk Prediction</span>
+    <span class="pp y">✅ Report Generator</span><span class="pp y">✅ Data Filter & Query</span>
+    <span class="pp y">✅ Building Comparison</span>
+    <span class="pp n">❌ Admin Panel</span><span class="pp n">❌ Individual User Data</span>
+    <span class="pp n">❌ User Management</span><span class="pp n">❌ ML Model Management</span>
+  </div>
+</div>
+
+<!-- BUILDING MANAGER -->
+<div id="rb" class="page">
+  <div class="rhead rhead-b">
+    <div class="rtitle" style="color:#7E22CE">🏢 Role 4 — Building Manager (Recommended Additional Role)</div>
+    <div class="rsub" style="color:#7E22CE">Manages energy monitoring for a specific multi-unit building or property</div>
+    <div class="rdesc" style="color:#7E22CE">A Building Manager is responsible for a specific commercial building, apartment complex or office property. They can monitor and predict energy usage for their entire building, set usage alerts for individual floors or units, compare consumption across their property, and generate monthly energy reports. They can see data from all units within their building but NOT other buildings' data.</div>
+    <div class="tags">
+      <span class="tag" style="background:#E9D5FF;color:#7E22CE">Admin Approved</span>
+      <span class="tag" style="background:#E9D5FF;color:#7E22CE">Building-Scoped Access</span>
+      <span class="tag" style="background:#E9D5FF;color:#7E22CE">Alert Management</span>
+      <span class="tag" style="background:#E9D5FF;color:#7E22CE">Unit Monitoring</span>
+    </div>
+  </div>
+
+  <div class="sec-title">Core Functions</div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🏗️</span>
+      <span class="fn-name">Register & Manage Building Profile</span>
+      <span class="fn-badge" style="background:#F3E8FF;color:#7E22CE">Building</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">The Building Manager registers their property in the system with details about building type, number of floors, units and average occupancy — creating a building profile that links all future energy predictions to that property.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Access <strong>Building Management page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Register building: <strong>building name, type (office/apartment/commercial), number of units, floors, location</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Building profile saved to <strong>MongoDB buildings collection</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">All energy predictions linked to this building will be <strong>grouped under this profile</strong></div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Admin must <strong>approve the building registration</strong> before full access is granted</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📊</span>
+      <span class="fn-name">View Building-Wide Energy Dashboard</span>
+      <span class="fn-badge" style="background:#F3E8FF;color:#7E22CE">Dashboard</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">The Building Manager has a dedicated dashboard showing aggregated energy usage across all units in their building — with breakdowns by floor, time of day and appliance category.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Access <strong>Building Dashboard</strong> after login</div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Summary cards: <strong>total building Wh predicted today, estimated daily cost Rs., most active floor</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Bar chart: <strong>energy usage per floor</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Line chart: <strong>total building usage trend over the past week/month</strong></div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Access is <strong>limited to their own building only</strong> — cannot see other buildings</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🚨</span>
+      <span class="fn-name">Set & Receive Energy Usage Alerts</span>
+      <span class="fn-badge" style="background:#F3E8FF;color:#7E22CE">Alerts</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Building Managers can define energy usage threshold alerts — e.g. if a floor exceeds 500 Wh in a single hour, an alert is triggered on their dashboard so they can investigate and take action.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Alert Settings page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Set threshold: e.g. <strong>"Alert me if any floor exceeds 500 Wh per hour"</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">When a prediction exceeds the threshold, an <strong>alert appears on the dashboard</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Alert shows: <strong>floor number, predicted Wh, time, severity (Medium / High / Critical)</strong></div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Alerts are <strong>saved in MongoDB alerts collection</strong> for historical review</div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">🔮</span>
+      <span class="fn-name">Run Building-Level Energy Prediction</span>
+      <span class="fn-badge" style="background:#F3E8FF;color:#7E22CE">ML</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Building Managers can run a whole-building energy prediction by entering building-level conditions — average indoor temperature, total occupants, total active appliances — to get an estimated total Wh for the building.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Open <strong>Building Predictor page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Enter: <strong>average indoor temp, total occupants, total active appliances, outdoor weather</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Flask ML model returns <strong>predicted total Wh for the building</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Shows <strong>estimated cost for the building</strong> in Rs. using CEB commercial tariff rates</div></div>
+      <div class="step"><div class="snum">5</div><div class="stext">Prediction saved to <strong>MongoDB building predictions collection</strong></div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📄</span>
+      <span class="fn-name">Generate Monthly Building Energy Report</span>
+      <span class="fn-badge" style="background:#F3E8FF;color:#7E22CE">Reports</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Building Managers can generate a monthly energy consumption report for their building — showing usage trends, peak periods, estimated cost and energy-saving recommendations.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Go to <strong>Report Generator page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Select <strong>month and year</strong></div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">Report includes: <strong>total Wh, daily breakdown, peak usage day, estimated Rs. cost, saving tips</strong></div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Download as <strong>PDF file</strong></div></div>
+    </div>
+  </div>
+
+  <div class="fn" onclick="tog(this)">
+    <div class="fn-top">
+      <span class="fn-icon">📅</span>
+      <span class="fn-name">View & Compare Historical Building Usage</span>
+      <span class="fn-badge" style="background:#F3E8FF;color:#7E22CE">History</span>
+      <span class="arr">▼</span>
+    </div>
+    <div class="fn-body">
+      <div class="fn-desc">Building Managers can compare their building's energy usage across different months or seasons to identify trends and improve energy efficiency planning.</div>
+      <div class="step"><div class="snum">1</div><div class="stext">Access <strong>Usage History page</strong></div></div>
+      <div class="step"><div class="snum">2</div><div class="stext">Select <strong>two months to compare</strong> side by side</div></div>
+      <div class="step"><div class="snum">3</div><div class="stext">View <strong>month-on-month change</strong> in total Wh and estimated cost</div></div>
+      <div class="step"><div class="snum">4</div><div class="stext">Identify <strong>high-usage periods</strong> (holidays, summer months) for better planning</div></div>
+    </div>
+  </div>
+
+  <div class="sec-title">Pages Accessible</div>
+  <div class="pages-row">
+    <span class="pp y">✅ Home</span><span class="pp y">✅ Building Dashboard</span>
+    <span class="pp y">✅ Building Predictor</span><span class="pp y">✅ Alert Settings</span>
+    <span class="pp y">✅ Report Generator</span><span class="pp y">✅ Usage History</span>
+    <span class="pp y">✅ My Profile</span>
+    <span class="pp n">❌ Admin Panel</span><span class="pp n">❌ Other Buildings' Data</span>
+    <span class="pp n">❌ Individual User Data</span><span class="pp n">❌ ML Model Management</span>
+  </div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+function tog(el){el.classList.toggle('open')}
+</script>
+</body>
+</html>
