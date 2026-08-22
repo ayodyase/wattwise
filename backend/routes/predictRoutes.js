@@ -5,11 +5,12 @@ const Prediction = require('../models/Prediction');
 const Building = require('../models/Building');
 const Alert = require('../models/Alert');
 const { protect } = require('../middleware/auth');
+const { validatePredictionInput } = require('../middleware/validate');
 
 const FLASK_ML_URL = process.env.FLASK_ML_URL || 'http://127.0.0.1:5001';
 
 // @route POST /api/predict
-router.post('/', protect, async (req, res) => {
+router.post('/', protect, validatePredictionInput, async (req, res) => {
   try {
     const {
       indoorTemp,

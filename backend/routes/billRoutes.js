@@ -97,8 +97,10 @@ function calculateCEBBill(monthlyKWh) {
   };
 }
 
+const { validateBillInput } = require('../middleware/validate');
+
 // @route POST /api/bill/calculate
-router.post('/calculate', (req, res) => {
+router.post('/calculate', validateBillInput, (req, res) => {
   try {
     const { monthlyKWh, hourlyWh } = req.body;
     let units = parseFloat(monthlyKWh);
