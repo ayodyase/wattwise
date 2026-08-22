@@ -74,11 +74,40 @@ router.get('/:id/dashboard-stats', protect, async (req, res) => {
   }
 });
 
-// @route GET /api/buildings/alerts
+// @route GET /api/buildings/alerts/active
 router.get('/alerts/active', protect, async (req, res) => {
   try {
     const alerts = await Alert.find().populate('buildingId', 'name location').sort({ createdAt: -1 }).limit(20);
     res.status(200).json({ success: true, alerts });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// @route DELETE /api/buildings/alerts/:id (Resolve/Dismiss alert)
+router.delete('/alerts/:id', protect, async (req, res) => {
+  try {
+    const alert = await Alert.findById(req.params.id);
+    if (!alert) {
+      return res.status(404).json({ success: false, error: 'Alert not found' });
+    }
+    await alert.deleteOne();
+    res.status(200).json({ success: true, message: 'Alert resolved and dismissed' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// @route DELETE /api/buildings/:id (Delete building)
+router.delete('/:id', protect, async (req, res) => {
+  try {
+    const building = await Building.findById(req.params.id);
+    if (!building) {
+      return res.status(404).json({ success: false, error: 'Building not found' });
+    }
+    await Alert.deleteMany({ buildingId: building._id });
+    await building.deleteOne();
+    res.status(200).json({ success: true, message: 'Building profile removed' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
