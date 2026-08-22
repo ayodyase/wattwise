@@ -87,19 +87,71 @@ def construct_feature_dict(data):
     """
     Constructs a 30-feature dict matching the trained Kaggle Appliances Energy dataset feature names.
     """
-    indoor_temp = float(data.get('indoorTemp', data.get('T1', 21.5)))
-    indoor_rh = float(data.get('indoorHumidity', data.get('RH_1', 40.0)))
-    outdoor_temp = float(data.get('outdoorTemp', data.get('T_out', 10.0)))
-    outdoor_rh = float(data.get('outdoorHumidity', data.get('RH_out', 75.0)))
+    try:
+        indoor_temp = float(data.get('indoorTemp', data.get('T1', 21.5)))
+    except (ValueError, TypeError):
+        indoor_temp = 21.5
+
+    try:
+        indoor_rh = float(data.get('indoorHumidity', data.get('RH_1', 40.0)))
+    except (ValueError, TypeError):
+        indoor_rh = 40.0
+
+    try:
+        outdoor_temp = float(data.get('outdoorTemp', data.get('T_out', 10.0)))
+    except (ValueError, TypeError):
+        outdoor_temp = 10.0
+
+    try:
+        outdoor_rh = float(data.get('outdoorHumidity', data.get('RH_out', 75.0)))
+    except (ValueError, TypeError):
+        outdoor_rh = 75.0
     
-    hour = int(data.get('hour', 14))
-    day_of_week = int(data.get('dayOfWeek', 2))
-    month = int(data.get('month', 3))
+    try:
+        hour = int(float(data.get('hour', 14)))
+    except (ValueError, TypeError):
+        hour = 14
+
+    # Robust Day of Week parsing (handles 'Monday', 'Tuesday', or integer 0..6)
+    day_raw = data.get('dayOfWeek', 2)
+    if isinstance(day_raw, str):
+        day_map = {
+            'monday': 0, 'mon': 0,
+            'tuesday': 1, 'tue': 1,
+            'wednesday': 2, 'wed': 2,
+            'thursday': 3, 'thu': 3,
+            'friday': 4, 'fri': 4,
+            'saturday': 5, 'sat': 5,
+            'sunday': 6, 'sun': 6
+        }
+        day_of_week = day_map.get(day_raw.strip().lower(), 2)
+    else:
+        try:
+            day_of_week = int(day_raw) % 7
+        except (ValueError, TypeError):
+            day_of_week = 2
+
+    try:
+        month = int(float(data.get('month', 3)))
+    except (ValueError, TypeError):
+        month = 3
+
     is_weekend = 1 if day_of_week in [5, 6] or data.get('isWeekend') else 0
     
-    occupants = int(data.get('occupants', 3))
-    appliances_active = int(data.get('appliancesActive', 2))
-    prev_usage = float(data.get('prevHourUsage', data.get('prev_hour_usage', 90.0 + (occupants * 15.0) + (appliances_active * 25.0))))
+    try:
+        occupants = int(float(data.get('occupants', 3)))
+    except (ValueError, TypeError):
+        occupants = 3
+
+    try:
+        appliances_active = int(float(data.get('appliancesActive', 2)))
+    except (ValueError, TypeError):
+        appliances_active = 2
+
+    try:
+        prev_usage = float(data.get('prevHourUsage', data.get('prev_hour_usage', 90.0 + (occupants * 15.0) + (appliances_active * 25.0))))
+    except (ValueError, TypeError):
+        prev_usage = 90.0 + (occupants * 15.0) + (appliances_active * 25.0)
     
     tod_code = get_time_of_day_code(hour)
 
@@ -141,7 +193,8 @@ def construct_feature_dict(data):
     for name in feature_names:
         ordered_row.append(feat_dict.get(name, 0.0))
 
-    return np.array([ordered_row]), feat_dict
+    df_row = pd.DataFrame([ordered_row], columns=feature_names)
+    return df_row, feat_dict
 
 @app.route('/health', methods=['GET'])
 def health():
