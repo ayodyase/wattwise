@@ -39,7 +39,10 @@ router.post('/', protect, validatePredictionInput, async (req, res) => {
         appliancesActive: appliancesActive || 2,
         hour: hour !== undefined ? hour : new Date().getHours(),
         dayOfWeek: dayOfWeek || 'Monday',
-        prevHourUsage: prevHourUsage || 100.0
+        prevHourUsage: prevHourUsage || 100.0,
+        userName: req.user.name,
+        userEmail: req.user.email,
+        userRole: req.user.role
       }, { timeout: 4000 });
 
       mlResult = flaskRes.data;
@@ -66,6 +69,19 @@ router.post('/', protect, validatePredictionInput, async (req, res) => {
     }
 
     const dayString = dayOfWeek || ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date().getDay()];
+
+    // Print Telemetry with User & Role Details to Backend CMD
+    console.log('\n======================================================');
+    console.log('⚡ [WATTWISE PREDICTION EVENT]');
+    console.log(`👤 User: ${req.user.name} (${req.user.email})`);
+    console.log(`🛡️  Role: ${req.user.role ? req.user.role.toUpperCase() : 'USER'}`);
+    console.log(`🏠 Property: ${buildingType || 'House'} | Hour: ${hour !== undefined ? hour : new Date().getHours()}:00 (${dayString})`);
+    console.log(`🌡️  Inputs: Indoor ${indoorTemp || 22.0}°C (${indoorHumidity || 60}%) | Outdoor ${outdoorTemp || 28.0}°C (${outdoorHumidity || 75}%)`);
+    console.log(`👥 Occupants: ${occupants || 3} | Active Appliances: ${appliancesActive || 2}`);
+    console.log(`💡 ML Forecast: ${mlResult.predictedWh} Wh (${mlResult.usageCategory} Load) | Lights: ${mlResult.lightsWh || Math.round(mlResult.predictedWh * 0.12)} Wh`);
+    console.log(`💰 Est. Cost: Rs. ${mlResult.estimatedCostLKR} LKR (Monthly: ~${((mlResult.predictedWh * 24 * 30) / 1000).toFixed(1)} kWh)`);
+    console.log(`🕒 Timestamp: ${new Date().toLocaleString()}`);
+    console.log('======================================================\n');
 
     // Save prediction record in MongoDB
     const newPrediction = await Prediction.create({

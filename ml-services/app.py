@@ -233,6 +233,20 @@ def predict():
         estimated_cost_lkr = round(predicted_wh * 0.0275, 2)
         estimated_monthly_kwh = round((predicted_wh * 24 * 30) / 1000.0, 2)
 
+        # User and Role Details from Request Body
+        user_name = data.get('userName', 'Anonymous User')
+        user_email = data.get('userEmail', 'N/A')
+        user_role = data.get('userRole', 'user')
+
+        # Print formatted Telemetry to Flask ML CMD Console
+        print("\n" + "="*56)
+        print("⚡ [FLASK ML MICROSERVICE PREDICTION EVENT]")
+        print(f"👤 User: {user_name} ({user_email})")
+        print(f"🛡️  Role: [{user_role.upper()}]")
+        print(f"📊 Forecast: {predicted_wh} Wh ({usage_category} Load) | Lights: {lights_wh} Wh")
+        print(f"💰 Hourly Est: Rs. {estimated_cost_lkr} LKR | Monthly: ~{estimated_monthly_kwh} kWh")
+        print("="*56 + "\n")
+
         return jsonify({
             'success': True,
             'predictedWh': predicted_wh,
