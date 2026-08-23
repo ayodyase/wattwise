@@ -22,7 +22,7 @@ app.use(cors());
 // Connect Database
 connectDB();
 
-// Seed initial default admin and regular user accounts
+// Seed initial default admin and regular user accounts (Local dev / standalone server)
 const seedDefaultAccounts = async () => {
   try {
     const adminExists = await User.findOne({ email: 'admin@wattwise.lk' });
@@ -62,7 +62,9 @@ const seedDefaultAccounts = async () => {
   }
 };
 
-setTimeout(seedDefaultAccounts, 2000);
+if (!process.env.VERCEL) {
+  setTimeout(seedDefaultAccounts, 2000);
+}
 
 // Mount API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -91,7 +93,13 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Start local server if run directly
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`WattWise Backend Express Server running on port ${PORT}`);
-});
+if (require.main === module || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`WattWise Backend Express Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
+
