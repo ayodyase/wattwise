@@ -66,6 +66,20 @@ if (!process.env.VERCEL) {
   setTimeout(seedDefaultAccounts, 2000);
 }
 
+// Middleware to ensure DB is connected for serverless invocations
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("DB Connection Failure:", err.message);
+    res.status(500).json({
+      success: false,
+      error: `Database connection failed: ${err.message}`
+    });
+  }
+});
+
 // Mount API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/predict', require('./routes/predictRoutes'));
@@ -74,6 +88,7 @@ app.use('/api/tips', require('./routes/tipsRoutes'));
 app.use('/api/buildings', require('./routes/buildingRoutes'));
 app.use('/api/analyst', require('./routes/analystRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
+
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
