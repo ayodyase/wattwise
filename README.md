@@ -321,7 +321,244 @@ classDiagram
 
 ---
 
-### 5. 🔄 Sequence Diagram 1: Energy Prediction & Real-Time Telemetry Flow
+### 5. 🖼️ Comprehensive System UI Wireframe & Layout Architecture
+
+The WattWise user experience is built on **React 18 + Tailwind CSS** featuring glassmorphic telemetry cards, real-time interactive input controllers, dynamic gauge meters, and high-density multi-role administrative tabs.
+
+#### 🗺️ UI Screen Flow & Viewport Component Hierarchy
+
+```mermaid
+flowchart TD
+    subgraph App_Shell ["🖥️ Global Application Shell & Responsive Viewport"]
+        Nav["Top Navigation Bar<br/>[⚡ WattWise] | [Home] [Predictor] [CEB Slabs] [Solar PV] [Tips] [Dashboard] [History] [Admin Shield] | [User Menu]"]
+        AnnounceBanner["Dynamic Notification Banner: System Announcements & Real-Time Alerts"]
+    end
+
+    subgraph Screen_1 ["1. 🏠 Household Energy Predictor (/predict)"]
+        direction LR
+        subgraph Col_Left_1 ["Input Parameter Panel"]
+            P1["Preset Buttons: Morning • Afternoon • Evening • Standby"]
+            P2["Sliders: Indoor & Outdoor Temp (°C), Humidity (%)"]
+            P3["Spinners: Occupants Count & Appliances Active"]
+            P4["Appliance Selector Toggles: AC • Fridge • Lights • Geyser • Washer"]
+            P5["Time/Day Pickers: Hour of Day (0-23) & Day of Week"]
+            P6["Action Buttons: [⚡ Predict Load] [🔄 Reset]"]
+        end
+        subgraph Col_Right_1 ["Real-Time Analytics Deck"]
+            R1["Primary Metric Gauge: Predicted Load (Wh) & kWh Equiv."]
+            R2["Status Badge: Load Category (Low / Normal / High / Very High)"]
+            R3["CEB Tariff Slabs Card: 6-Tier Itemized Cost Breakdown (LKR)"]
+            R4["Solar Offset Card: Estimated Generation & Savings (LKR)"]
+            R5["Actionable Energy Tips: Targeted Conservation Advice"]
+            R6["Export Tools: [📄 Export PDF / Print] [💾 Save Prediction]"]
+        end
+    end
+
+    subgraph Screen_2 ["2. 🛡️ System Admin & Energy Analyst Super-Console (/admin)"]
+        direction TB
+        AdminTabs["Tab Navigation: [👥 Users] • [📊 Analyst Queries] • [🏢 Building Mgr] • [📑 Batch CSV] • [💡 Tips CRUD] • [🔒 Audit Logs] • [🔄 Retrain ML]"]
+        
+        subgraph Tab_User ["Tab 1: User Accounts Manager"]
+            U1["Search Bar & Role Filter (All / Regular Users / Admins)"]
+            U2["User Grid: Name | Email | City | Role Badge | Status Toggle | Actions"]
+            U3["[+ Register New Admin] Dedicated Secure Modal"]
+        end
+        
+        subgraph Tab_Analyst ["Tab 2: Energy Analyst Query Engine"]
+            A1["Filter Matrix: Property Type • Category • Wh Range • Hour Window (0-23)"]
+            A2["Aggregated Metrics: Total Queries • Mean Wh • Projected LKR Revenue"]
+            A3["Telemetry Data Grid & [📥 Export Filtered CSV] Engine"]
+        end
+
+        subgraph Tab_Building ["Tab 3: Building Manager & Simulator"]
+            B1["Register Property Profile: Type (House/Apartment/Office) • Floors • Threshold Wh"]
+            B2["Multi-Floor Whole-Building Load Simulator"]
+            B3["Active Anomaly Alert Badges (Critical / High / Medium)"]
+        end
+
+        subgraph Tab_CSV ["Tab 4: Batch CSV Machine Learning Engine"]
+            C1["Bulk Telemetry CSV Input / File Upload Dropzone"]
+            C2["[⚡ Process Batch Predictions] & [📥 Download Results CSV]"]
+        end
+    end
+
+    subgraph Screen_3 ["3. 📊 Personal Analytics Dashboard & History (/dashboard & /history)"]
+        direction LR
+        subgraph Dash_Metrics ["Telemetry Summary KPIs"]
+            K1["Monthly Usage (kWh)"]
+            K2["Estimated Bill (LKR)"]
+            K3["Active Predictions Count"]
+            K4["Carbon Offset (kg CO2)"]
+        end
+        subgraph Dash_Charts ["Interactive Data Visualizers"]
+            CH1["24-Hour Load Trend Bar Chart (Recharts)"]
+            CH2["Usage Category Distribution Pie Chart"]
+        end
+        subgraph Hist_Grid ["Historical Logs Grid"]
+            HG1["Telemetry History Table with Date Filtering & Sorting"]
+            HG2["[Export CSV] & [Export PDF] Controls"]
+        end
+    end
+
+    subgraph Screen_4 ["4. 🇱🇰 CEB Tariff & Rooftop Solar PV Simulators (/bill-estimator & /solar)"]
+        direction LR
+        subgraph Bill_Calc ["CEB 2024 Slab Engine"]
+            BC1["Monthly Units Input Slider (0 - 500+ kWh)"]
+            BC2["Itemized 6-Tier Slab Pricing Table"]
+            BC3["Fixed Charge + Fuel Surcharge Calculation"]
+            BC4["Total Payable LKR Summary Card"]
+        end
+        subgraph Solar_Calc ["Rooftop Solar PV Simulator"]
+            SC1["System Capacity Slider (1 kW to 20 kW)"]
+            SC2["Regional Irradiance Selector (Colombo, Kandy, Galle, Jaffna)"]
+            SC3["Monthly Generation (kWh) & Grid Export Offset (LKR)"]
+            SC4["Payback Period (Years) & CO2 Offset Projection"]
+        end
+    end
+
+    App_Shell --> Screen_1
+    App_Shell --> Screen_2
+    App_Shell --> Screen_3
+    App_Shell --> Screen_4
+```
+
+#### 📐 High-Fidelity UI Wireframe Blueprints
+
+##### [WF-01] 🏠 Household Energy Predictor & CEB Bill Simulator (`/predict`)
+```text
++---------------------------------------------------------------------------------------------------------+
+| [⚡ WattWise]   Home   Predictor   CEB Slabs   Solar PV   Tips   Dashboard   History   [🛡️ Admin]  [👤 User] |
++---------------------------------------------------------------------------------------------------------+
+| 📢 Announcement: CEB 2024 Electricity Tariff Updates in Effect. Check the updated slab estimates below. |
++---------------------------------------------------------------------------------------------------------+
+| 🏠 HOUSEHOLD ENERGY PREDICTOR & CEB BILL SIMULATOR                                                      |
+| Configure your environmental metrics and active appliances to compute hourly energy forecasts.          |
++-------------------------------------------------------+-------------------------------------------------+
+| ⚙️ 1. QUICK SIMULATION PRESETS                        | ⚡ PREDICTED HOURLY CONSUMPTION                 |
+| [🌅 Morning] [☀️ Afternoon] [🌆 Evening] [🌙 Standby]   |                                                 |
+|                                                       |              /=============\                    |
+| 🌡️ 2. ENVIRONMENTAL TELEMETRY                         |             /   258.93 Wh   \                   |
+| Indoor Temperature (°C) : [=======|====] 25.0 °C      |            (    (0.259 kWh)  )                  |
+| Outdoor Temperature (°C): [========|===] 29.5 °C      |             \               /                   |
+| Indoor Humidity (%)     : [======|=====] 60.0 %       |              \=============/                    |
+| Outdoor Humidity (%)    : [=======|====] 72.0 %       |                                                 |
+|                                                       | Load Category: [ 🟡 HIGH USAGE LOAD (181-350 Wh)]|
+| 👥 3. HOUSEHOLD PROFILE                               | Lighting Load: 45.20 Wh                         |
+| Occupants Count         : [ - ]  3  [ + ]             | Hourly Cost  : Rs. 2.59 LKR                     |
+| Active Appliances       : [ - ]  4  [ + ]             +-------------------------------------------------+
+| Property Type           : [ Apartment      v ]        | 🇱🇰 ESTIMATED MONTHLY CEB BILL (186 kWh/mo)       |
+|                                                       | Tier 1 (0-30 units)  : 30 @ Rs. 2.50  = Rs.  75 |
+| 🔌 4. ACTIVE HOUSEHOLD APPLIANCES                     | Tier 2 (31-60 units) : 30 @ Rs. 4.85  = Rs. 145 |
+| [x] Air Conditioner     [x] Refrigerator              | Tier 3 (61-90 units) : 30 @ Rs. 7.85  = Rs. 235 |
+| [x] LED Lighting        [ ] Washing Machine           | Tier 4 (91-120 units): 30 @ Rs. 10.00 = Rs. 300 |
+| [ ] Water Heater        [x] TV / Entertainment        | Tier 5 (121-180 units: 60 @ Rs. 27.75 = Rs.1665 |
+|                                                       | Tier 6 (181+ units)  :  6 @ Rs. 45.00 = Rs. 270 |
+| 🕒 5. TEMPORAL METRICS                                | Fixed Monthly Charge                 = Rs.2,000 |
+| Hour of Day (0-23)      : [==============|] 19:00     | ----------------------------------------------- |
+| Day of Week             : [ Monday         v ]        | TOTAL MONTHLY ESTIMATED BILL        = Rs.4,690  |
+|                                                       +-------------------------------------------------+
+| [⚡ CALCULATE ENERGY PREDICTION]   [🔄 RESET DEFAULTS] | 💡 TARGETED ENERGY SAVING TIPS                  |
+|                                                       | • AC: Set thermostat to 25°C to save up to 15%. |
+|                                                       | • Lighting: Switch to LED to reduce 80% load.   |
+|                                                       | [📄 EXPORT PDF / PRINT]   [💾 SAVE PREDICTION]  |
++-------------------------------------------------------+-------------------------------------------------+
+```
+
+##### [WF-02] 🛡️ Enterprise Administrator & Energy Analyst Super-Console (`/admin`)
+```text
++---------------------------------------------------------------------------------------------------------+
+| [⚡ WattWise]   Home   Predictor   CEB Slabs   Solar PV   Tips   Dashboard   History   [🛡️ Admin]  [👤 Admin]|
++---------------------------------------------------------------------------------------------------------+
+| 🛡️ SYSTEM ADMIN & ENERGY ANALYST CONSOLE                                            [ SUPER ADMIN WORKSPACE ]|
+| Enterprise multi-role management, anonymized analytics dataset, and whole-building telemetry tracking. |
++---------------------------------------------------------------------------------------------------------+
+| [👥 User Accounts (48)] [📊 Analyst Queries] [🏢 Building Mgr (6)] [📑 Batch CSV] [💡 Tips] [🔒 Audits] [🔄 ML] |
++---------------------------------------------------------------------------------------------------------+
+| 🔍 Search Users: [ Search by name or email...    ]   Role Filter: [ All Roles v ]   [+ REGISTER NEW ADMIN]|
++---------------------------------------------------------------------------------------------------------+
+| USER ACCOUNTS REPOSITORY                                                                                |
+| +--------------------+-----------------------+-----------+----------+-----------+---------------------+ |
+| | Full Name          | Email Address         | Location  | Role     | Status    | Actions             | |
+| +--------------------+-----------------------+-----------+----------+-----------+---------------------+ |
+| | Kasun Perera       | user@wattwise.lk      | Colombo   | [ User ] | [ Active ]| [Promote] [Suspend] | |
+| | Ayodya Sandeepani  | admin@wattwise.lk     | Kandy     | [Admin ] | [ Active ]| [Demote ] [Suspend] | |
+| | Dilshan Silva      | dilshan@example.com   | Galle     | [ User ] | [Suspend ]| [Promote] [Delete ] | |
+| +--------------------+-----------------------+-----------+----------+-----------+---------------------+ |
++---------------------------------------------------------------------------------------------------------+
+| 📊 ENERGY ANALYST QUERY ENGINE & DATASET EXPORTER                                                       |
+| Property: [ All Types v ] Category: [ High v ] Min Wh: [ 150 ] Max Wh: [ 400 ] Hour: [ 18 ] to [ 23 ]  |
+| [🔍 EXECUTE QUERY]    Query Results: 142 records found (Mean: 246.8 Wh)       [📥 EXPORT FILTERED CSV]  |
++---------------------------------------------------------------------------------------------------------+
+| 🏢 WHOLE-BUILDING LOAD SIMULATOR & SPIKE ALERTS                                                         |
+| Property: [ Colombo Commercial Plaza (4 Floors) v ]  Occupants/Floor: [ 12 ]   [⚡ SIMULATE WHOLE BUILDING] |
+| Result: Simulated 1,280.40 Wh load across 4 floors. Status: [ 🔴 CRITICAL THRESHOLD BREACH (> 450 Wh) ] |
++---------------------------------------------------------------------------------------------------------+
+| 📑 BATCH CSV MACHINE LEARNING PROCESSOR                                                                 |
+| Paste CSV: [ indoorTemp,outdoorTemp,hour,appliancesActive... ]  [⚡ PROCESS BATCH] [📥 DOWNLOAD CSV]   |
++---------------------------------------------------------------------------------------------------------+
+| 🔄 RANDOM FOREST MODEL RETRAINING & DRIFT EVALUATION                                                    |
+| Current Status: R² = 0.912 | MAE = 18.42 Wh | RMSE = 26.15 Wh                 [🔄 TRIGGER MODEL RETRAIN] |
++---------------------------------------------------------------------------------------------------------+
+```
+
+##### [WF-03] 📊 Personal Analytics Dashboard & Telemetry History (`/dashboard` & `/history`)
+```text
++---------------------------------------------------------------------------------------------------------+
+| [⚡ WattWise]   Home   Predictor   CEB Slabs   Solar PV   Tips   Dashboard   History   [🛡️ Admin]  [👤 User] |
++---------------------------------------------------------------------------------------------------------+
+| 📊 PERSONAL ENERGY ANALYTICS & USAGE DASHBOARD                                                          |
+| Welcome back, Kasun Perera! Here is your real-time electricity consumption summary.                     |
++---------------------+---------------------+---------------------+---------------------------------------+
+| ⚡ MONTHLY FORECAST  | 🇱🇰 ESTIMATED BILL    | 📊 TOTAL PREDICTIONS| 🌿 CO2 CARBON OFFSET                  |
+| 186.4 kWh           | Rs. 4,690.00 LKR    | 24 Simulations      | 112.5 kg CO2 / month                  |
+| +4.2% vs last month | Slab 6 (Tiered)     | 4 Active Profiles   | (Equivalent to 5 trees)               |
++---------------------+---------------------+---------------------+---------------------------------------+
+| 📈 24-HOURLY ENERGY CONSUMPTION PATTERN (Wh)              | 🥧 CONSUMPTION BY LOAD CATEGORY             |
+|                                                           |                                             |
+| 400|                          #                           |         ######       ■ Low (<80 Wh)         |
+| 300|                   #      #   #                       |       ##########     ■ Normal (80-180 Wh)   |
+| 200|         #   #     #      #   #   #                   |       ##########     ■ High (181-350 Wh)    |
+| 100| #   #   #   #     #      #   #   #   #               |         ######       ■ Very High (>350 Wh)  |
+|   0+---+---+---+---+---+---+---+---+---+---+              |                                             |
+|   00  03  06  09  12  15  18  21  23 (Hour)               | 45% Normal  | 35% High | 20% Low            |
++-----------------------------------------------------------+---------------------------------------------+
+| 📜 RECENT PREDICTION TELEMETRY LOG                                                                      |
+| Search Logs: [ Search by date / property... ]                                     [📥 EXPORT CSV / PDF] |
+| +---------------------+--------------+-----------+----------+-------------+------------+--------------+ |
+| | Timestamp           | Property     | Temp / Hum| Occupants| Active Apps | Wh Load    | Est. Cost    | |
+| +---------------------+--------------+-----------+----------+-------------+------------+--------------+ |
+| | 2026-08-29 19:30    | Apartment    | 25°C / 60%| 3        | 4 (AC, Ref) | 258.9 Wh   | Rs. 4,690    | |
+| | 2026-08-29 14:15    | Apartment    | 29°C / 72%| 2        | 2 (Ref, TV) | 142.1 Wh   | Rs. 2,120    | |
+| | 2026-08-29 08:00    | Apartment    | 24°C / 65%| 3        | 3 (Lights)  | 110.5 Wh   | Rs. 1,450    | |
+| +---------------------+--------------+-----------+----------+-------------+------------+--------------+ |
++---------------------------------------------------------------------------------------------------------+
+```
+
+##### [WF-04] 🇱🇰 CEB 2024 Tariff Slab Estimator & Rooftop Solar PV Simulator (`/bill-estimator` & `/solar`)
+```text
++---------------------------------------------------------------------------------------------------------+
+| [⚡ WattWise]   Home   Predictor   CEB Slabs   Solar PV   Tips   Dashboard   History   [🛡️ Admin]  [👤 User] |
++---------------------------------------------------------------------------------------------------------+
+| 🇱🇰 SRI LANKA CEB 2024 RESIDENTIAL TARIFF ESTIMATOR & ROOFTOP SOLAR PV SIMULATOR                        |
++-------------------------------------------------------+-------------------------------------------------+
+| ⚡ CEB TARIFF SLAB CALCULATOR                         | ☀️ ROOFTOP SOLAR PV OFFSET SIMULATOR            |
+| Monthly Consumption (kWh): [===========|=====] 180    | System Capacity (kW)  : [======|=====] 5.0 kW   |
+|                                                       | Regional Solar Sun Hrs: [ Colombo (4.8 hrs) v ] |
+| Itemized Slab Breakdown:                              |                                                 |
+| • 00 - 30 Units : 30 @ Rs.  2.50 = Rs.   75.00        | Estimated Monthly Gen : 720.00 kWh / month      |
+| • 31 - 60 Units : 30 @ Rs.  4.85 = Rs.  145.50        | Grid Export Tariff    : Rs. 37.00 / unit (Net)  |
+| • 61 - 90 Units : 30 @ Rs.  7.85 = Rs.  235.50        | Monthly Rupee Offset  : Rs. 26,640.00 LKR       |
+| • 91 - 120 Units: 30 @ Rs. 10.00 = Rs.  300.00        | System Initial Cost   : Rs. 1,250,000 LKR       |
+| • 121- 180 Units: 60 @ Rs. 27.75 = Rs. 1,665.00       | Estimated Payback     : 3.9 Years               |
+| Fixed Monthly Charge             = Rs. 1,500.00       | Annual Carbon Offset  : 6.8 Tons CO2 / Year     |
+| ----------------------------------------------------- | ----------------------------------------------- |
+| TOTAL PAYABLE AMOUNT             = Rs. 3,921.00 LKR   | NET BALANCE BENEFIT   = +Rs. 22,719.00 / month  |
++-------------------------------------------------------+-------------------------------------------------+
+```
+
+---
+
+### 6. 🔄 Sequence Diagram 1: Energy Prediction & Real-Time Telemetry Flow
 
 ```mermaid
 sequenceDiagram
@@ -358,7 +595,7 @@ sequenceDiagram
 
 ---
 
-### 6. 🔐 Sequence Diagram 2: Authentication & Admin-Only Admin Creation Flow
+### 7. 🔐 Sequence Diagram 2: Authentication & Admin-Only Admin Creation Flow
 
 ```mermaid
 sequenceDiagram
@@ -390,7 +627,7 @@ sequenceDiagram
 
 ---
 
-### 7. 📈 Sequence Diagram 3: Energy Analyst Query & Dataset Export Flow
+### 8. 📈 Sequence Diagram 3: Energy Analyst Query & Dataset Export Flow
 
 ```mermaid
 sequenceDiagram
@@ -416,7 +653,7 @@ sequenceDiagram
 
 ---
 
-### 8. ⚡ Decision & Activity Diagram: CEB 2024 Residential Tariff Slab Algorithm
+### 9. ⚡ Decision & Activity Diagram: CEB 2024 Residential Tariff Slab Algorithm
 
 ```mermaid
 flowchart TD
@@ -442,7 +679,7 @@ flowchart TD
 
 ---
 
-### 9. 🌐 Deployment & DevOps CI/CD Architecture Diagram
+### 10. 🌐 Deployment & DevOps CI/CD Architecture Diagram
 
 ```mermaid
 graph LR
