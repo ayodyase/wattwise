@@ -104,7 +104,124 @@ flowchart LR
 
 ---
 
-### 3. 🧩 Database & Backend Class Diagram (Mongoose Models)
+### 3. 🗄️ Database Entity-Relationship (ER) Diagram & Data Schema
+
+The WattWise persistent data layer is implemented on **MongoDB Atlas** using **Mongoose ODM**. The schema design models relational integrity via `ObjectId` references across 7 core collections:
+
+```mermaid
+erDiagram
+    USERS ||--o{ PREDICTIONS : "generates / logs"
+    USERS ||--o{ BUILDINGS : "manages"
+    USERS o|--o{ TIPS : "authors"
+    USERS o|--o{ ANNOUNCEMENTS : "broadcasts"
+    USERS o|--o{ AUDIT_LOGS : "triggers"
+    BUILDINGS ||--o{ ALERTS : "monitors / fires"
+    BUILDINGS o|--o{ PREDICTIONS : "aggregates"
+
+    USERS {
+        ObjectId _id PK "Unique User Identifier"
+        string name "User Full Name"
+        string email UK "Unique Email Address"
+        string password "Bcrypt Hashed Password"
+        string role "Enum: user | admin"
+        string status "Enum: active | suspended"
+        string avatar "Profile Avatar URI"
+        string phone "Contact Phone Number"
+        string city "City / District (e.g., Colombo)"
+        date createdAt "Account Creation Timestamp"
+    }
+
+    BUILDINGS {
+        ObjectId _id PK "Unique Building Identifier"
+        string name "Building / Facility Name"
+        string type "Enum: House | Apartment | Office | Commercial"
+        ObjectId managerId FK "Manager Reference -> USERS._id"
+        int floorsCount "Number of Floors (Default: 1)"
+        int unitsCount "Number of Units (Default: 1)"
+        string location "Geographic Address"
+        float alertThresholdWh "Spike Alert Threshold in Wh (Default: 400)"
+        date createdAt "Registration Timestamp"
+    }
+
+    PREDICTIONS {
+        ObjectId _id PK "Unique Prediction Identifier"
+        ObjectId userId FK "User Reference -> USERS._id"
+        ObjectId buildingId FK "Building Reference -> BUILDINGS._id (Optional)"
+        float indoorTemp "Indoor Temperature (°C)"
+        float outdoorTemp "Outdoor Temperature (°C)"
+        float indoorHumidity "Indoor Relative Humidity (%)"
+        float outdoorHumidity "Outdoor Relative Humidity (%)"
+        int occupants "Count of Active Occupants"
+        int appliancesActive "Count of Active Appliances"
+        int hour "Hour of Day (0-23)"
+        string dayOfWeek "Day of Week (Monday - Sunday)"
+        string buildingType "Enum: House | Apartment | Office | Commercial"
+        float predictedWh "Predicted Energy Consumption (Wh)"
+        float lightsWh "Estimated Lighting Sub-load (Wh)"
+        string usageCategory "Enum: Low | Normal | High | Very High"
+        float estimatedCostLKR "Calculated CEB Bill Cost (LKR)"
+        date createdAt "Prediction Log Timestamp"
+    }
+
+    ALERTS {
+        ObjectId _id PK "Unique Alert Identifier"
+        ObjectId buildingId FK "Building Reference -> BUILDINGS._id"
+        int floorNumber "Target Floor Number (Default: 1)"
+        float predictedWh "Simulated / Measured Wh"
+        float thresholdWh "Configured Alert Limit Wh"
+        string severity "Enum: Medium | High | Critical"
+        string status "Enum: Active | Acknowledged | Resolved"
+        string message "Diagnostic Incident Message"
+        date createdAt "Alert Trigger Timestamp"
+    }
+
+    TIPS {
+        ObjectId _id PK "Unique Tip Identifier"
+        string title "Tip Headline"
+        string content "Detailed Conservation Advice"
+        string usageLevel "Enum: All | Low | Normal | High | Very High"
+        string appliance "Enum: General | AC / Cooling | Refrigerator | Lighting | Water Heater | Electronics"
+        float potentialSavingsPercent "Estimated Savings Percentage (%)"
+        ObjectId createdBy FK "Admin Reference -> USERS._id"
+        date createdAt "Creation Timestamp"
+    }
+
+    AUDIT_LOGS {
+        ObjectId _id PK "Unique Audit Log Identifier"
+        ObjectId userId FK "User Reference -> USERS._id (Nullable)"
+        string userName "User Display Name (Default: System)"
+        string action "Event Action Code (e.g., ADMIN_CREATE_ADMIN)"
+        string details "Detailed Audit Context"
+        string ipAddress "Client IPv4 / IPv6 Address"
+        date createdAt "Event Timestamp"
+    }
+
+    ANNOUNCEMENTS {
+        ObjectId _id PK "Unique Announcement Identifier"
+        string title "Announcement Headline"
+        string message "Broadcast Message Body"
+        string badge "Enum: Info | Tariff Update | Maintenance | Feature"
+        boolean active "Visibility Flag (Default: true)"
+        ObjectId createdBy FK "Admin Reference -> USERS._id"
+        date createdAt "Publish Timestamp"
+    }
+```
+
+#### 📋 Entity Relationship & Data Dictionary
+
+| Collection / Entity | Key Fields & Types | Cardinality & Relationships | Purpose & Integrity Constraints |
+| :--- | :--- | :--- | :--- |
+| **`users`** | `_id` (PK, ObjectId)<br/>`email` (UK, String)<br/>`password` (String, Hashed)<br/>`role` (Enum: `user`, `admin`)<br/>`status` (Enum: `active`, `suspended`) | • `1 : N` with `predictions`<br/>• `1 : N` with `buildings`<br/>• `1 : N` with `tips`<br/>• `1 : N` with `announcements`<br/>• `1 : N` with `auditlogs` | Core authentication & access management. Passwords hashed with 10-round bcrypt salt. Unique email indexed for fast credential lookups. |
+| **`buildings`** | `_id` (PK, ObjectId)<br/>`managerId` (FK, ObjectId -> `users`)<br/>`type` (Enum: `House`, `Apartment`, `Office`, `Commercial`)<br/>`alertThresholdWh` (Number) | • `N : 1` with `users` (Manager)<br/>• `1 : N` with `alerts`<br/>• `1 : N` with `predictions` | Multi-unit property profiling and multi-floor load simulation. `managerId` references administrative manager. |
+| **`predictions`** | `_id` (PK, ObjectId)<br/>`userId` (FK, ObjectId -> `users`)<br/>`buildingId` (FK, ObjectId -> `buildings`, Nullable)<br/>`predictedWh` (Number)<br/>`estimatedCostLKR` (Number) | • `N : 1` with `users`<br/>• `N : 1` with `buildings` (Optional) | Historical telemetry & ML regression log store. Contains complete environmental vector and CEB tariff financial computation. |
+| **`alerts`** | `_id` (PK, ObjectId)<br/>`buildingId` (FK, ObjectId -> `buildings`)<br/>`severity` (Enum: `Medium`, `High`, `Critical`)<br/>`status` (Enum: `Active`, `Acknowledged`, `Resolved`) | • `N : 1` with `buildings` | Real-time threshold breach notifications generated when whole-building or floor predictions exceed `alertThresholdWh`. |
+| **`tips`** | `_id` (PK, ObjectId)<br/>`createdBy` (FK, ObjectId -> `users`)<br/>`usageLevel` (Enum: `All`, `Low`, `Normal`, `High`, `Very High`)<br/>`appliance` (Enum: `General`, `AC / Cooling`, etc.) | • `N : 1` with `users` | Dynamic CEB conservation guidance catalog filtered by load tier and appliance category. |
+| **`auditlogs`** | `_id` (PK, ObjectId)<br/>`userId` (FK, ObjectId -> `users`, Nullable)<br/>`action` (String)<br/>`ipAddress` (String) | • `N : 1` with `users` (Nullable) | Security and compliance audit trail tracking administrative actions (admin registration, role change, user suspension, ML retraining). |
+| **`announcements`** | `_id` (PK, ObjectId)<br/>`createdBy` (FK, ObjectId -> `users`)<br/>`badge` (Enum: `Info`, `Tariff Update`, `Maintenance`, `Feature`)<br/>`active` (Boolean) | • `N : 1` with `users` | Global alert and broadcast notice banner system displayed across all user dashboards. |
+
+---
+
+### 4. 🧩 Database & Backend Class Diagram (Mongoose Models)
 
 ```mermaid
 classDiagram
@@ -204,7 +321,7 @@ classDiagram
 
 ---
 
-### 4. 🔄 Sequence Diagram 1: Energy Prediction & Real-Time Telemetry Flow
+### 5. 🔄 Sequence Diagram 1: Energy Prediction & Real-Time Telemetry Flow
 
 ```mermaid
 sequenceDiagram
@@ -241,7 +358,7 @@ sequenceDiagram
 
 ---
 
-### 5. 🔐 Sequence Diagram 2: Authentication & Admin-Only Admin Creation Flow
+### 6. 🔐 Sequence Diagram 2: Authentication & Admin-Only Admin Creation Flow
 
 ```mermaid
 sequenceDiagram
@@ -273,7 +390,7 @@ sequenceDiagram
 
 ---
 
-### 6. 📈 Sequence Diagram 3: Energy Analyst Query & Dataset Export Flow
+### 7. 📈 Sequence Diagram 3: Energy Analyst Query & Dataset Export Flow
 
 ```mermaid
 sequenceDiagram
@@ -299,7 +416,7 @@ sequenceDiagram
 
 ---
 
-### 7. ⚡ Decision & Activity Diagram: CEB 2024 Residential Tariff Slab Algorithm
+### 8. ⚡ Decision & Activity Diagram: CEB 2024 Residential Tariff Slab Algorithm
 
 ```mermaid
 flowchart TD
@@ -325,7 +442,7 @@ flowchart TD
 
 ---
 
-### 8. 🌐 Deployment & DevOps CI/CD Architecture Diagram
+### 9. 🌐 Deployment & DevOps CI/CD Architecture Diagram
 
 ```mermaid
 graph LR
