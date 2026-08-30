@@ -31,15 +31,6 @@ export default function LoginPage() {
     }
   };
 
-  const fillDemoUser = () => {
-    setEmail('user@wattwise.lk');
-    setPassword('User@123456');
-  };
-
-  const fillDemoAdmin = () => {
-    setEmail('admin@wattwise.lk');
-    setPassword('Admin@123456');
-  };
 
   return (
     <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
@@ -53,28 +44,6 @@ export default function LoginPage() {
           <p className="text-xs text-slate-400">Sign in to access your energy predictions and CEB bill analytics</p>
         </div>
 
-        {/* Quick Demo Credentials Banner */}
-        <div className="glass-card p-4 rounded-2xl border-slate-800 bg-slate-900/60 space-y-2 text-xs">
-          <span className="block font-semibold text-slate-300 uppercase tracking-wider text-[10px]">
-            ⚡ One-Click Demo Sign In:
-          </span>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={fillDemoUser}
-              className="px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center gap-1.5 font-medium transition-colors"
-            >
-              <UserCheck className="w-3.5 h-3.5" /> Demo User
-            </button>
-            <button
-              type="button"
-              onClick={fillDemoAdmin}
-              className="px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center gap-1.5 font-medium transition-colors"
-            >
-              <Shield className="w-3.5 h-3.5" /> System Admin
-            </button>
-          </div>
-        </div>
 
         {error && (
           <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
