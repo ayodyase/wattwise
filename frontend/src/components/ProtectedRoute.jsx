@@ -1,17 +1,20 @@
 import React, { useContext, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Loader2 } from 'lucide-react';
 
 function AdminRejectRedirect({ userRole }) {
   const { error: toastError } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     toastError(`Access Restricted: Administrator privileges required. Your current role is ${userRole}.`);
-  }, [toastError, userRole]);
+    // Redirect imperatively after triggering the toast
+    navigate('/dashboard', { replace: true });
+  }, [toastError, userRole, navigate]);
 
-  return <Navigate to="/dashboard" replace />;
+  return null;
 }
 
 export default function ProtectedRoute({ children, adminOnly = false }) {
