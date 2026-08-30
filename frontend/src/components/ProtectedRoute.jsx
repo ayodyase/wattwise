@@ -17,6 +17,18 @@ function AdminRejectRedirect({ userRole }) {
   return null;
 }
 
+function LoginRedirect() {
+  const { error: toastError } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    toastError("Access Restricted: Please log in to access this page.");
+    navigate('/login', { replace: true });
+  }, [toastError, navigate]);
+
+  return null;
+}
+
 export default function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading } = useContext(AuthContext);
 
@@ -30,7 +42,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <LoginRedirect />;
   }
 
   if (adminOnly && user.role !== 'admin') {
