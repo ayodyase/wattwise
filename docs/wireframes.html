@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WattWise — UI/UX Wireframe & Design System Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #111827;
+      --surface-border: #1f2937;
+      --primary: #10b981;
+      --primary-glow: rgba(16, 185, 129, 0.2);
+      --accent: #06b6d4;
+      --danger: #ef4444;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--surface-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #0b0f19;
+      font-size: 18px;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title span { color: var(--primary); }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      background: #0f172a;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--surface-border);
+      gap: 4px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      color: #0b0f19;
+      font-weight: 700;
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      border-radius: 20px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--primary);
+    }
+
+    main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .hero-panel {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .hero-text h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+
+    .hero-text p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      max-width: 800px;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .spec-card h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .spec-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .wireframe-container {
+      background: #ffffff;
+      border: 2px solid #1e293b;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      overflow-x: auto;
+      margin-bottom: 2.5rem;
+    }
+
+    .wireframe-view {
+      display: none;
+      width: 100%;
+    }
+
+    .wireframe-view.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .wireframe-view img, .wireframe-view object {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      border-top: 1px solid var(--surface-border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <div class="brand-title">Watt<span>Wise</span> UI/UX Wireframes</div>
+        <div class="brand-subtitle">Low-Fi &amp; Mid-Fi Responsive Blueprint Portfolio</div>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="nav-btn active" onclick="switchTab('master')">🗺️ Master Architecture Board</button>
+      <button class="nav-btn" onclick="switchTab('home')">🏠 Home Page</button>
+      <button class="nav-btn" onclick="switchTab('features')">⚡ Features Page</button>
+      <button class="nav-btn" onclick="switchTab('contact')">📬 Contact Page</button>
+      <button class="nav-btn" onclick="switchTab('predictor')">🤖 ML Predictor</button>
+      <button class="nav-btn" onclick="switchTab('admin')">🛡️ Admin Console</button>
+    </nav>
+
+    <div class="controls-bar">
+      <span class="badge">12-Column Responsive Grid</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-panel">
+      <div class="hero-text">
+        <h1>📐 WattWise UI/UX Wireframe &amp; Interaction Architecture</h1>
+        <p>
+          High-precision, industry-standard low/mid-fidelity system wireframes for the WattWise Intelligent Energy Consumption Prediction &amp; CEB 2024 Tariff Analytics Platform. Designed with responsive adaptation for desktop, tablet, and mobile viewports.
+        </p>
+      </div>
+    </section>
+
+    <!-- SPECIFICATION CARDS -->
+    <section class="spec-grid">
+      <div class="spec-card">
+        <h3>📱 Mobile-First Reflow</h3>
+        <p>Single-column adaptive hierarchy featuring 48px touch targets, sticky quick-dial bar, expandable drawer navigation, and fluid 2-column sponsor grids.</p>
+      </div>
+      <div class="spec-card">
+        <h3>⚡ Alternating Feature Grid</h3>
+        <p>Visual zig-zag rhythm (Feature 1: Image Left, Feature 2: Image Right, Feature 3: Image Left) designed to maximize scanability and user retention.</p>
+      </div>
+      <div class="spec-card">
+        <h3>🇱🇰 Sri Lanka Context Insets</h3>
+        <p>Ceylon Electricity Board (CEB) 2024 tiered tariff accumulator gauge, instant Rupee bill breakdown, and Colombo Geo-tagged map integration.</p>
+      </div>
+      <div class="spec-card">
+        <h3>🛡️ Enterprise Role Guards</h3>
+        <p>Dedicated Administrative and Analyst workspace with telemetry search filters, batch CSV drag-and-drop processing, and ML model retraining.</p>
+      </div>
+    </section>
+
+    <!-- WIREFRAME DISPLAY CANVAS -->
+    <div class="wireframe-container">
+      
+      <!-- TAB 1: MASTER MULTI-PAGE BOARD -->
+      <div id="view-master" class="wireframe-view active">
+        <object data="wattwise-ui-ux-wireframes.svg" type="image/svg+xml" style="width:100%; min-height:850px;"></object>
+      </div>
+
+      <!-- TAB 2: HOME PAGE -->
+      <div id="view-home" class="wireframe-view">
+        <object data="wireframe-home.svg" type="image/svg+xml" style="width:100%; min-height:850px;"></object>
+      </div>
+
+      <!-- TAB 3: FEATURES PAGE -->
+      <div id="view-features" class="wireframe-view">
+        <object data="wireframe-features.svg" type="image/svg+xml" style="width:100%; min-height:850px;"></object>
+      </div>
+
+      <!-- TAB 4: CONTACT PAGE -->
+      <div id="view-contact" class="wireframe-view">
+        <object data="wireframe-contact.svg" type="image/svg+xml" style="width:100%; min-height:850px;"></object>
+      </div>
+
+      <!-- TAB 5: ML PREDICTOR PAGE -->
+      <div id="view-predictor" class="wireframe-view">
+        <object data="wireframe-predictor.svg" type="image/svg+xml" style="width:100%; min-height:850px;"></object>
+      </div>
+
+      <!-- TAB 6: ADMIN CONSOLE -->
+      <div id="view-admin" class="wireframe-view">
+        <object data="wireframe-admin.svg" type="image/svg+xml" style="width:100%; min-height:850px;"></object>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 WattWise Energy Management System. UI/UX Wireframe Specification Suite.</p>
+  </footer>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.wireframe-view').forEach(view => {
+        view.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      const activeView = document.getElementById('view-' + tabId);
+      if (activeView) activeView.classList.add('active');
+
+      const clickedBtn = event.currentTarget;
+      if (clickedBtn) clickedBtn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

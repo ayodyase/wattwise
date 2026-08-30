@@ -1,7 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { Loader2 } from 'lucide-react';
+
+function AdminRejectRedirect({ userRole }) {
+  const { error: toastError } = useToast();
+
+  useEffect(() => {
+    toastError(`Access Restricted: Administrator privileges required. Your current role is ${userRole}.`);
+  }, [toastError, userRole]);
+
+  return <Navigate to="/dashboard" replace />;
+}
 
 export default function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading } = useContext(AuthContext);
@@ -20,20 +31,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   }
 
   if (adminOnly && user.role !== 'admin') {
-    return (
-      <div className="max-w-2xl mx-auto my-16 p-8 glass-card rounded-2xl border-rose-500/30 text-center space-y-4">
-        <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 mx-auto flex items-center justify-center font-bold text-xl">
-          !
-        </div>
-        <h2 className="text-2xl font-bold text-white">Access Restricted</h2>
-        <p className="text-sm text-slate-300">
-          The Admin Console requires System Administrator privileges. Your current role is <span className="font-semibold text-emerald-400">{user.role}</span>.
-        </p>
-        <div className="pt-2">
-          <Navigate to="/dashboard" replace />
-        </div>
-      </div>
-    );
+    return <AdminRejectRedirect userRole={user.role} />;
   }
 
   return children;

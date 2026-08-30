@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1350" width="100%" height="100%" style="background:#ffffff; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <style>
+      .title-bold { font-size: 20px; font-weight: 800; fill: #0f172a; }
+      .wire-box { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; }
+      .wire-box-dark { fill: #0f172a; stroke: #0f172a; stroke-width: 1.5; }
+      .wire-fill-dark { fill: #0f172a; }
+      .wire-fill-light { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1; }
+      .wire-line { stroke: #475569; stroke-width: 2; stroke-linecap: round; }
+      .wire-line-sm { stroke: #64748b; stroke-width: 1.4; stroke-linecap: round; }
+      .wire-x { stroke: #475569; stroke-width: 1.4; }
+      .logo-circle { fill: #ffffff; stroke: #0f172a; stroke-width: 2; }
+      .logo-icon { font-size: 18px; font-weight: 800; fill: #0f172a; text-anchor: middle; dominant-baseline: central; }
+    </style>
+  </defs>
+
+  <!-- Page Container Frame -->
+  <rect x="40" y="30" width="1120" height="1290" rx="8" class="wire-box" stroke-width="2" />
+  
+  <!-- Browser Chrome -->
+  <rect x="40" y="30" width="1120" height="40" fill="#f8fafc" stroke="#1e293b" stroke-width="1.5" />
+  <circle cx="65" cy="50" r="5" fill="#cbd5e1" />
+  <circle cx="80" cy="50" r="5" fill="#cbd5e1" />
+  <circle cx="95" cy="50" r="5" fill="#cbd5e1" />
+  <rect x="130" y="40" width="450" height="20" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <text x="145" y="54" font-size="11" fill="#64748b">https://wattwise.lk/admin</text>
+
+  <!-- TOP ADMIN BAR -->
+  <g id="navbar" transform="translate(40, 70)">
+    <rect x="0" y="0" width="1120" height="60" class="wire-box" />
+    <circle cx="45" cy="30" r="16" class="logo-circle" />
+    <text x="45" y="30" class="logo-icon">⚡</text>
+    <text x="75" y="36" font-size="16" font-weight="800" fill="#0f172a">WattWise Admin Console</text>
+    
+    <rect x="850" y="15" width="120" height="30" rx="6" class="wire-box" />
+    <text x="910" y="34" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">🛡️ Admin Role</text>
+
+    <rect x="990" y="15" width="90" height="30" rx="6" class="wire-box-dark" />
+    <text x="1035" y="34" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Sign Out</text>
+  </g>
+
+  <!-- MAIN ADMIN LAYOUT: SIDEBAR (LEFT) + CONTENT DECK (RIGHT) -->
+  <g id="admin-deck" transform="translate(40, 130)">
+    
+    <!-- LEFT SIDEBAR -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="240" height="1130" class="wire-box" />
+      
+      <g transform="translate(20, 25)">
+        <rect x="0" y="0" width="100" height="14" rx="3" class="wire-fill-dark" />
+        <text x="50" y="10" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">ADMIN MODULES</text>
+
+        <!-- Menu Links -->
+        <g transform="translate(0, 30)">
+          <!-- Active Tab -->
+          <rect x="0" y="0" width="200" height="36" rx="6" class="wire-box-dark" />
+          <text x="15" y="22" font-size="11" font-weight="700" fill="#ffffff">📊 System Overview</text>
+
+          <rect x="0" y="44" width="200" height="36" rx="6" class="wire-box" />
+          <text x="15" y="66" font-size="11" font-weight="600" fill="#334155">👥 User Accounts</text>
+
+          <rect x="0" y="88" width="200" height="36" rx="6" class="wire-box" />
+          <text x="15" y="110" font-size="11" font-weight="600" fill="#334155">📈 Analyst Query Tool</text>
+
+          <rect x="0" y="132" width="200" height="36" rx="6" class="wire-box" />
+          <text x="15" y="154" font-size="11" font-weight="600" fill="#334155">🏢 Multi-Unit Buildings</text>
+
+          <rect x="0" y="176" width="200" height="36" rx="6" class="wire-box" />
+          <text x="15" y="198" font-size="11" font-weight="600" fill="#334155">📁 Batch CSV Processor</text>
+
+          <rect x="0" y="220" width="200" height="36" rx="6" class="wire-box" />
+          <text x="15" y="242" font-size="11" font-weight="600" fill="#334155">💡 Energy Tips Manager</text>
+
+          <rect x="0" y="264" width="200" height="36" rx="6" class="wire-box" />
+          <text x="15" y="286" font-size="11" font-weight="600" fill="#334155">🔒 Security Audit Logs</text>
+
+          <rect x="0" y="308" width="200" height="36" rx="6" class="wire-box" />
+          <text x="15" y="330" font-size="11" font-weight="600" fill="#334155">🔄 Trigger ML Retrain</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- RIGHT CONTENT WORKSPACE -->
+    <g transform="translate(260, 20)">
+      
+      <!-- 4 KPI Summary Metric Cards -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="190" height="85" rx="6" class="wire-box" />
+        <text x="15" y="25" font-size="10" font-weight="700" fill="#64748b">TOTAL PREDICTIONS</text>
+        <text x="15" y="55" font-size="22" font-weight="800" fill="#0f172a">19,735</text>
+        <text x="15" y="72" font-size="10" fill="#0f172a">▲ 14% this week</text>
+
+        <rect x="210" y="0" width="190" height="85" rx="6" class="wire-box" />
+        <text x="225" y="25" font-size="10" font-weight="700" fill="#64748b">ACTIVE USERS</text>
+        <text x="225" y="55" font-size="22" font-weight="800" fill="#0f172a">1,420</text>
+        <text x="225" y="72" font-size="10" fill="#0f172a">Across Sri Lanka</text>
+
+        <rect x="420" y="0" width="190" height="85" rx="6" class="wire-box" />
+        <text x="435" y="25" font-size="10" font-weight="700" fill="#64748b">MEAN HOURLY WH</text>
+        <text x="435" y="55" font-size="22" font-weight="800" fill="#0f172a">214.8 Wh</text>
+        <text x="435" y="72" font-size="10" fill="#0f172a">Normal Load Band</text>
+
+        <rect x="630" y="0" width="190" height="85" rx="6" class="wire-box" />
+        <text x="645" y="25" font-size="10" font-weight="700" fill="#64748b">ACTIVE SPIKE ALERTS</text>
+        <text x="645" y="55" font-size="22" font-weight="800" fill="#0f172a">3 Active</text>
+        <text x="645" y="72" font-size="10" fill="#0f172a">Building load threshold</text>
+      </g>
+
+      <!-- ANALYST QUERY &amp; TELEMETRY LOG TABLE -->
+      <g transform="translate(0, 110)">
+        <rect x="0" y="0" width="820" height="380" rx="8" class="wire-box" />
+        
+        <text x="20" y="32" font-size="13" font-weight="800" fill="#0f172a">Historical Telemetry Dataset &amp; CEB Bill Calculations</text>
+        
+        <!-- Filter Controls Bar -->
+        <g transform="translate(20, 48)">
+          <rect x="0" y="0" width="140" height="30" rx="4" class="wire-box" />
+          <text x="15" y="19" font-size="10" fill="#334155">Property: All</text>
+
+          <rect x="150" y="0" width="140" height="30" rx="4" class="wire-box" />
+          <text x="165" y="19" font-size="10" fill="#334155">Load: High / Very High</text>
+
+          <rect x="300" y="0" width="140" height="30" rx="4" class="wire-box" />
+          <text x="315" y="19" font-size="10" fill="#334155">Hour: 18:00 – 22:00</text>
+
+          <rect x="450" y="0" width="100" height="30" rx="4" class="wire-box-dark" />
+          <text x="500" y="19" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">Filter 🔍</text>
+
+          <rect x="640" y="0" width="140" height="30" rx="4" class="wire-box-dark" />
+          <text x="710" y="19" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">📥 Export CSV</text>
+        </g>
+
+        <!-- Table Header -->
+        <g transform="translate(20, 95)">
+          <rect x="0" y="0" width="780" height="28" class="wire-fill-light" />
+          <text x="10" y="18" font-size="10" font-weight="700" fill="#0f172a">Timestamp</text>
+          <text x="160" y="18" font-size="10" font-weight="700" fill="#0f172a">User / Building</text>
+          <text x="320" y="18" font-size="10" font-weight="700" fill="#0f172a">Sensors (Temp/Hum)</text>
+          <text x="490" y="18" font-size="10" font-weight="700" fill="#0f172a">Predicted Wh</text>
+          <text x="610" y="18" font-size="10" font-weight="700" fill="#0f172a">Load Tier</text>
+          <text x="700" y="18" font-size="10" font-weight="700" fill="#0f172a">CEB Cost</text>
+
+          <!-- Row 1 -->
+          <rect x="0" y="30" width="780" height="24" class="wire-box" />
+          <text x="10" y="46" font-size="10" fill="#334155">2026-08-29 14:30</text>
+          <text x="160" y="46" font-size="10" fill="#334155">user@wattwise.lk (House)</text>
+          <text x="320" y="46" font-size="10" fill="#334155">24.5°C | 65% | 4 Occ</text>
+          <text x="490" y="46" font-size="10" font-weight="700" fill="#0f172a">258.9 Wh</text>
+          <text x="610" y="46" font-size="10" fill="#0f172a">High</text>
+          <text x="700" y="46" font-size="10" font-weight="700" fill="#0f172a">Rs. 4,709</text>
+
+          <!-- Row 2 -->
+          <rect x="0" y="56" width="780" height="24" class="wire-box" />
+          <text x="10" y="72" font-size="10" fill="#334155">2026-08-29 13:45</text>
+          <text x="160" y="72" font-size="10" fill="#334155">Lotus Tower Suite (Apt)</text>
+          <text x="320" y="72" font-size="10" fill="#334155">28.0°C | 70% | 6 Occ</text>
+          <text x="490" y="72" font-size="10" font-weight="700" fill="#0f172a">412.3 Wh</text>
+          <text x="610" y="72" font-size="10" fill="#0f172a">Very High</text>
+          <text x="700" y="72" font-size="10" font-weight="700" fill="#0f172a">Rs. 8,450</text>
+
+          <!-- Row 3 -->
+          <rect x="0" y="82" width="780" height="24" class="wire-box" />
+          <text x="10" y="98" font-size="10" fill="#334155">2026-08-29 12:15</text>
+          <text x="160" y="98" font-size="10" fill="#334155">Colombo 07 Villa (House)</text>
+          <text x="320" y="98" font-size="10" fill="#334155">23.0°C | 60% | 2 Occ</text>
+          <text x="490" y="98" font-size="10" font-weight="700" fill="#0f172a">145.0 Wh</text>
+          <text x="610" y="98" font-size="10" fill="#0f172a">Normal</text>
+          <text x="700" y="98" font-size="10" font-weight="700" fill="#0f172a">Rs. 1,820</text>
+        </g>
+      </g>
+
+      <!-- USER MANAGEMENT &amp; BATCH CSV SECTION (2 COLUMNS) -->
+      <g transform="translate(0, 510)">
+        
+        <!-- Left: Admin User Management -->
+        <g transform="translate(0, 0)">
+          <rect x="0" y="0" width="395" height="260" rx="8" class="wire-box" />
+          <text x="20" y="28" font-size="12" font-weight="800" fill="#0f172a">User Accounts &amp; Access Roles</text>
+          
+          <rect x="235" y="12" width="140" height="26" rx="4" class="wire-box-dark" />
+          <text x="305" y="29" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">+ Register New Admin</text>
+
+          <g transform="translate(20, 50)">
+            <rect x="0" y="0" width="355" height="40" rx="4" class="wire-fill-light" />
+            <text x="10" y="24" font-size="11" font-weight="700" fill="#0f172a">admin@wattwise.lk</text>
+            <text x="220" y="24" font-size="10" fill="#0f172a">[Admin] Active</text>
+
+            <rect x="0" y="48" width="355" height="40" rx="4" class="wire-box" />
+            <text x="10" y="72" font-size="11" fill="#334155">user@wattwise.lk</text>
+            <text x="220" y="72" font-size="10" fill="#334155">[User] Active</text>
+
+            <rect x="0" y="96" width="355" height="40" rx="4" class="wire-box" />
+            <text x="10" y="120" font-size="11" fill="#334155">property_mgr@wattwise.lk</text>
+            <text x="220" y="120" font-size="10" fill="#334155">[User] Active</text>
+          </g>
+        </g>
+
+        <!-- Right: Batch CSV Processing &amp; Model Retrain -->
+        <g transform="translate(425, 0)">
+          <rect x="0" y="0" width="395" height="260" rx="8" class="wire-box" />
+          <text x="20" y="28" font-size="12" font-weight="800" fill="#0f172a">Batch CSV Telemetry &amp; ML Retraining</text>
+
+          <g transform="translate(20, 50)">
+            <rect x="0" y="0" width="355" height="80" rx="6" stroke="#cbd5e1" stroke-dasharray="4 4" fill="#ffffff" />
+            <text x="177" y="38" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">📁 Drag &amp; Drop Telemetry CSV File</text>
+            <text x="177" y="56" font-size="10" fill="#64748b" text-anchor="middle">Bulk ML predictions processed via Flask microservice</text>
+
+            <rect x="0" y="95" width="355" height="40" rx="6" class="wire-box-dark" />
+            <text x="177" y="119" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">🔄 Trigger Random Forest Model Retraining</text>
+          </g>
+        </g>
+      </g>
+
+    </g>
+  </g>
+
+</svg>

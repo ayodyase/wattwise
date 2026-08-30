@@ -323,125 +323,54 @@ classDiagram
 
 ### 5. 🖼️ Multi-Page UI Wireframe & Responsive Layout Architecture
 
-The WattWise web application wireframe architecture models responsive desktop and mobile viewports across key system pages (**Home / Landing Page**, **Features Page**, and **Contact & Support Page**), detailing component placements, alternating feature showcase grids, sponsor ribbons, interactive contact forms, and embedded map containers.
+The WattWise web application UI/UX architecture is modeled after an industry-standard low-fidelity / mid-fidelity wireframe blueprint system across key viewports and system pages (**Mobile Version**, **Home / Landing Page**, **Features Page**, and **Contact & Support Page**). It establishes visual component hierarchy, alternating feature showcase blocks, institutional partner grids, interactive telemetry forms, and Colombo Geo-tagged map integration with clear responsive reflow and user journey annotations:
 
-```mermaid
-flowchart LR
-    %% Mobile Version
-    subgraph Mobile_Version ["📱 Mobile Version (Responsive)"]
-        direction TB
-        M_Header["📞 Phone Call &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ☰ Mobile Menu<br/><b>(⚡) WattWise Logo</b>"]
-        M_Hero["<b>Hero Banner (Compact)</b><br/>[ 🖼️ Hero Slide Image ]"]
-        M_About["<b>About WattWise</b><br/>[ 🖼️ Company Image ]<br/>Smart ML & CEB Analytics Intro"]
-        M_Sponsors["<b>Logo Sponsors Grid</b><br/>[CEB] [LECO] [SLSEA]<br/>[ICBT] [Kaggle] [Gov.lk]"]
-        M_Contact["<b>Contact Form</b><br/>[ Inputs & Submit ]"]
-        M_Footer["<b>Footer</b><br/>(⚡) Logo • Sitemap • Copyright"]
+![WattWise Multi-Page UI/UX Wireframes & Responsive Layout Blueprint](docs/wattwise-ui-ux-wireframes.svg)
 
-        M_Header --> M_Hero --> M_About --> M_Sponsors --> M_Contact --> M_Footer
-    end
+> 🌐 **Interactive Wireframe Viewer**: View the full responsive interactive wireframe portfolio with viewport switching across all pages at [docs/wireframes.html](docs/wireframes.html).
 
-    %% Home Page
-    subgraph Home_Page ["🏠 Home Page"]
-        direction TB
-        H_Menu["<b>Top Menu Navigation</b><br/>(⚡) <b>WattWise</b> &nbsp;|&nbsp; [Home] &nbsp; [Features] &nbsp; [Predictor] &nbsp; [CEB Slabs] &nbsp; [Solar PV] &nbsp; [Tips] &nbsp; [Contact] &nbsp;|&nbsp; [Login]"]
-        
-        subgraph H_Hero ["HeroBanner — Multiple Slide Image"]
-            H_HeroContent["&lt;&nbsp;&nbsp;&nbsp;&nbsp; <b>[ 🖼️ Slide Image: Smart Energy Forecasting & Tariff Analytics ]</b> &nbsp;&nbsp;&nbsp;&nbsp;&gt;<br/>• • • • (Slide Pagination Dots)"]
-        end
+<details>
+<summary><b>🔍 Expand Individual Page-by-Page Wireframes (Home, Features, Contact, Predictor, Admin)</b></summary>
 
-        subgraph H_About ["About Us Section"]
-            direction LR
-            H_AboutImg["[ 🖼️ Company / System Image ]"]
-            H_AboutText["<b>Intro Title & More Info</b><br/>Intelligent energy forecasting tailored for Sri Lankan households and property managers.<br/>[ ⚡ Explore Smart Features ➔ ]"]
-        end
+<br/>
 
-        subgraph H_Sponsors ["Sponsors Section"]
-            H_SponsorsList["<b>Institutional & Technology Sponsors</b><br/>[ 🏛️ CEB ] &nbsp; [ ⚡ LECO ] &nbsp; [ 🌿 SLSEA ] &nbsp; [ 🎓 ICBT ] &nbsp; [ 📊 Kaggle ] &nbsp; [ ⚛️ React ] &nbsp; [ 🐍 Python ] &nbsp; [ 🍃 Mongo ]"]
-        end
+#### 1. 🏠 Home / Landing Page Wireframe
+![WattWise Home Page Wireframe](docs/wireframe-home.svg)
 
-        subgraph H_Footer ["Footer Section"]
-            direction LR
-            H_FootContact["<b>Contact Form</b><br/>[ Name Input ]<br/>[ Email Input ]<br/>[ Message Box ]<br/>[ Send Message ]"]
-            H_FootSitemap["<b>Sitemap Links</b><br/>• Predictor Engine<br/>• CEB 2024 Slabs<br/>• Solar PV Offset<br/>• Energy Tips<br/>• Admin Console"]
-            H_FootInfo["<b>Business Contact Info</b><br/>📍 Colombo, Sri Lanka<br/>📞 Phone: +94 11 234 5678<br/>📧 Email: support@wattwise.lk<br/>(⚡) <b>WattWise</b>"]
-        end
+---
 
-        H_Menu --> H_Hero --> H_About --> H_Sponsors --> H_Footer
-    end
+#### 2. ⚡ Features & CEB 2024 Tariff Engine Wireframe
+![WattWise Features Page Wireframe](docs/wireframe-features.svg)
 
-    %% Features Page
-    subgraph Features_Page ["⚡ Features Page"]
-        direction TB
-        F_Menu["<b>Top Menu Navigation</b><br/>(⚡) <b>WattWise</b> &nbsp;|&nbsp; [Home] &nbsp; [Features] &nbsp; [Predictor] &nbsp; [CEB Slabs] &nbsp; [Solar PV] &nbsp; [Tips] &nbsp; [Contact] &nbsp;|&nbsp; [Login]"]
-        F_Title["<b>← Page Title: Intelligent Energy Features & Core Modules</b>"]
+---
 
-        subgraph F_Block1 ["Feature #1: Random Forest Energy Predictor"]
-            direction LR
-            F_B1_Img["[ 🖼️ Feature #1 Image<br/>ML Predictor Telemetry ]"]
-            F_B1_Txt["<b>Hourly Wh Energy Consumption Predictor</b><br/>• Random Forest Regressor trained on 19,735 telemetry records<br/>• Environmental sensor inputs: Temp, Humidity, Occupants<br/>• Active appliance toggles with load category classification"]
-        end
+#### 3. 📬 Contact & Technical Support Page Wireframe
+![WattWise Contact Page Wireframe](docs/wireframe-contact.svg)
 
-        subgraph F_Block2 ["Feature #2: CEB 2024 Tiered Tariff Engine"]
-            direction LR
-            F_B2_Txt["<b>Sri Lanka CEB 2024 Residential Tariff Slab Engine</b><br/>• Exact 6-tier slab mathematical breakdown (0-30 to 181+ units)<br/>• Fixed charges and monthly bill simulations<br/>• Contextual actionable energy reduction tips"]
-            F_B2_Img["[ 🖼️ Feature #2 Image<br/>CEB 2024 Slab Matrix ]"]
-        end
+---
 
-        subgraph F_Block3 ["Feature #3: Rooftop Solar & Admin Analytics"]
-            direction LR
-            F_B3_Img["[ 🖼️ Feature #3 Image<br/>Solar PV & Admin Deck ]"]
-            F_B3_Txt["<b>Solar Net-Accounting & Enterprise Admin Console</b><br/>• 1-20 kW rooftop solar generation & payback simulation<br/>• Multi-role admin management, batch CSV ML processing<br/>• Whole-building load monitoring & threshold breach alerts"]
-        end
+#### 4. 🤖 ML Energy Consumption Predictor Wireframe
+![WattWise ML Predictor Wireframe](docs/wireframe-predictor.svg)
 
-        subgraph F_Footer ["Footer Section"]
-            F_FootContent["<b>(⚡) WattWise Platform</b> &nbsp;|&nbsp; Sitemap &nbsp;|&nbsp; Business Contact: support@wattwise.lk &nbsp;|&nbsp; Copyright © 2026 WattWise"]
-        end
+---
 
-        F_Menu --> F_Title --> F_Block1 --> F_Block2 --> F_Block3 --> F_Footer
-    end
+#### 5. 🛡️ Enterprise Administrative & Analyst Workspace Wireframe
+![WattWise Admin Console Wireframe](docs/wireframe-admin.svg)
 
-    %% Contact Page
-    subgraph Contact_Page ["📬 Contact Page"]
-        direction TB
-        C_Menu["<b>Top Menu Navigation</b><br/>(⚡) <b>WattWise</b> &nbsp;|&nbsp; [Home] &nbsp; [Features] &nbsp; [Predictor] &nbsp; [CEB Slabs] &nbsp; [Solar PV] &nbsp; [Tips] &nbsp; [Contact] &nbsp;|&nbsp; [Login]"]
-        C_Title["<b>← Page Title: Contact Us & Technical Support</b>"]
-        C_TopContact["<b>Business Contact Info:</b> &nbsp;&nbsp; 📞 Phone: +94 11 234 5678 &nbsp;&nbsp;&nbsp;&nbsp; 📧 Email: support@wattwise.lk"]
+---
 
-        subgraph C_Body ["Main Body: Contact Form & Google Map"]
-            direction LR
-            subgraph C_FormBlock ["Contact Form"]
-                C_Form["<b>Send us a Message</b><br/>[ Full Name Input ]<br/>[ Email Address Input ]<br/>[ Subject / Topic ]<br/>[ Message Textarea ]<br/>[ ✉️ Submit Inquiry ]"]
-            end
-            subgraph C_MapBlock ["Google Map Container"]
-                C_Map["[ 🗺️ Google Map Embed<br/>Colombo Energy Technology Hub<br/>Sri Lanka Sustainable Energy Authority ]"]
-            end
-        end
-
-        subgraph C_Footer ["Footer Section"]
-            C_FootDetails["<b>Business Address & Hours:</b> 123 Energy Plaza, Colombo 03, Sri Lanka • Mon-Fri: 8:30 AM - 5:00 PM<br/>(⚡) <b>WattWise</b> &nbsp;|&nbsp; Sitemap &nbsp;|&nbsp; Privacy Policy &nbsp;|&nbsp; Copyright © 2026 WattWise"]
-        end
-
-        C_Menu --> C_Title --> C_TopContact --> C_Body --> C_Footer
-    end
-
-    %% Responsive Linkages
-    Mobile_Version <===>|<b>Responsive Adaptation</b>| Home_Page
-
-    %% Navigation Routing Linkages
-    H_Menu -.->|<b>Menu Navigation</b>| Features_Page
-    H_Menu -.->|<b>Menu Navigation</b>| Contact_Page
-    H_AboutText ==>|<b>CTA: More Info / Features</b>| Features_Page
-    F_Menu -.->|<b>Menu Navigation</b>| Contact_Page
-```
+</details>
 
 #### 📋 Wireframe Layout & Component Specifications
 
 | Viewport / Page | Section Blocks & Layout Structure | Interactive Elements & Key Call-to-Actions | Responsive & Mobile Adaptation |
 | :--- | :--- | :--- | :--- |
-| **📱 Mobile Version** | Single-column stacked viewport: Phone quick-call header, Hamburger menu, Compact hero slider, About summary, Sponsors logo grid (2×3), Inline contact form, Compact footer. | • One-tap call button<br/>• Expandable navigation drawer<br/>• Touch swipeable hero cards | Optimized for `<768px` screens with touch-friendly 48px hit targets and collapsible navigation. |
+| **📱 Mobile Version** | Single-column stacked viewport: Phone quick-call header, Hamburger menu, Compact hero slider, About summary, Sponsors logo grid (2×4), Inline contact form, Compact footer. | • One-tap call button<br/>• Expandable navigation drawer<br/>• Touch swipeable hero cards | Optimized for `<768px` screens with touch-friendly 48px hit targets and collapsible navigation. |
 | **🏠 Home Page** | • **Header**: Logo `(⚡)` + Navigation bar<br/>• **HeroBanner**: Full-width multi-slide image carousel with `< >` controls and pagination indicators<br/>• **About Us**: 2-column layout (Company image + Intro/more info)<br/>• **Sponsors**: 8-column partner logo grid<br/>• **Footer**: 3-column footer (Contact form, Sitemap links, Business info + Logo) | • Hero carousel slide controls<br/>• **"Explore Smart Features"** CTA button linking directly to Features Page<br/>• Quick contact submission form in footer | Fluid multi-column grid that automatically reflows to single-column on smaller viewports. |
 | **⚡ Features Page** | • **Header**: Logo `(⚡)` + Navigation bar<br/>• **Page Title Bar**: Module overview header<br/>• **Alternating Feature Blocks**:<br/>  - *Feature #1*: Image Left + Text/Bullets Right (ML Predictor)<br/>  - *Feature #2*: Text/Bullets Left + Image Right (CEB 2024 Slabs)<br/>  - *Feature #3*: Image Left + Text/Bullets Right (Solar & Admin Deck)<br/>• **Footer**: Standard bottom bar with sitemap & contact info | • Deep-link anchors to live tools (`/predict`, `/bill-estimator`, `/solar`)<br/>• Feature itemization badges | Alternating left/right media blocks automatically stack into consistent top-media / bottom-content cards on mobile. |
 | **📬 Contact Page** | • **Header**: Logo `(⚡)` + Navigation bar<br/>• **Top Quick Bar**: Direct Phone and Email contact pills<br/>• **Main Body (2-Column Grid)**:<br/>  - *Left*: Inquiry contact form (Name, Email, Subject, Message, Submit button)<br/>  - *Right*: Large interactive Google Map embed container<br/>• **Bottom Bar**: Office address, operating hours, sitemap, copyright | • Live form validation with instant feedback<br/>• Interactive Google Map pan/zoom controls<br/>• One-click email/phone launcher | Form and map stack vertically on tablets and smartphones with full-width interactive map iframe. |
+| **🤖 ML Predictor Page** | • **Header**: Breadcrumbs + Quick scenario presets (Morning, Afternoon, Evening, Night)<br/>• **Main Body (2-Column Grid)**:<br/>  - *Left*: Environmental telemetry inputs (Temp, Humidity, Occupants, Hour) + Active Appliance Toggles<br/>  - *Right*: Real-time Wh Gauge + CEB 2024 6-Slab Itemized Accumulator + Action Buttons | • Interactive Appliance cards with state indicators<br/>• Instant PDF / Print export trigger<br/>• Save prediction to user history | Reflows to single-column input form with sticky calculation results card at viewport bottom. |
+| **🛡️ Admin Console** | • **Header**: Admin Role Badge + System Status<br/>• **Left Sidebar**: 8 Module Nav Links (Overview, Users, Analyst Query, Buildings, CSV Batch, Tips, Audits, Retrain)<br/>• **Right Workspace**: 4 KPI Metric Summary Cards + Historical Telemetry Table with CSV Export + User Role Management | • One-click CSV dataset export<br/>• Multi-parameter dataset filtering<br/>• Admin registration modal<br/>• Batch CSV file dropzone | Collapses sidebar into mobile drawer and provides responsive horizontal scroll on data tables. |
 
 ---
 

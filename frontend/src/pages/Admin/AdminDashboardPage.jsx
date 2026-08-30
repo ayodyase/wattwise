@@ -27,6 +27,10 @@ export default function AdminDashboardPage() {
   const [announcements, setAnnouncements] = useState([]);
   const [retrainRes, setRetrainRes] = useState(null);
 
+  // Tariff State
+  const [tariffConfig, setTariffConfig] = useState(null);
+  const [tariffLoading, setTariffLoading] = useState(false);
+
   // Analyst Query State
   const [queryBuildingType, setQueryBuildingType] = useState('All');
   const [queryCategory, setQueryCategory] = useState('All');
@@ -121,12 +125,22 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const fetchTariffConfig = async () => {
+    try {
+      const res = await axios.get('/api/admin/tariff');
+      setTariffConfig(res.data.config);
+    } catch (err) {
+      console.error("Fetch tariff config error:", err);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
     fetchAggregateStats();
     fetchBuildings();
     fetchTips();
     fetchAuditLogs();
+    fetchTariffConfig();
   }, []);
 
   // User Actions
@@ -138,6 +152,18 @@ export default function AdminDashboardPage() {
       success(`Updated user role to ${nextRole}`);
     } catch (err) {
       toastError(err.response?.data?.error || "Role update failed");
+    }
+  };
+
+  const handleSaveTariff = async () => {
+    setTariffLoading(true);
+    try {
+      await axios.put('/api/admin/tariff', tariffConfig);
+      success("CEB Tariff Configuration updated successfully!");
+    } catch (err) {
+      toastError(err.response?.data?.error || "Failed to update tariff config");
+    } finally {
+      setTariffLoading(false);
     }
   };
 
@@ -477,6 +503,15 @@ export default function AdminDashboardPage() {
           }`}
         >
           <Cpu className="w-4 h-4" /> ML Model & Export
+        </button>
+
+        <button
+          onClick={() => setActiveTab('tariffs')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap ${
+            activeTab === 'tariffs' ? 'bg-amber-500 text-slate-950 shadow-glow' : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+          }`}
+        >
+          <Sliders className="w-4 h-4" /> Tariff Config
         </button>
       </div>
 
@@ -1249,6 +1284,92 @@ export default function AdminDashboardPage() {
                 <Download className="w-4 h-4" /> Export Registered Accounts (CSV)
               </a>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 8: TARIFF CONFIGURATION */}
+      {activeTab === 'tariffs' && tariffConfig && (
+        <div className="space-y-6 animate-fade-in">
+          <div className="glass-card p-6 rounded-3xl border-slate-800 space-y-4">
+            <h3 className="font-bold text-base text-white flex items-center gap-2">
+              <Sliders className="w-5 h-5 text-amber-400" /> CEB Residential Tariff Slabs
+            </h3>
+            <p className="text-xs text-slate-400">
+              Update the active tariff rates and fixed charges. Changes apply instantly to all subsequent ML bill predictions and visualizers.
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="space-y-4 bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                <h4 className="text-sm font-bold text-slate-300">Global Parameters</h4>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] text-slate-400 uppercase tracking-wide">Fuel Surcharge (%)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs"
+                    value={tariffConfig.fuelSurchargePercent}
+                    onChange={(e) => setTariffConfig({ ...tariffConfig, fuelSurchargePercent: parseFloat(e.target.value) || 0 })}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] text-slate-400 uppercase tracking-wide">Avg Rate Per kWh (LKR) - For ML Fallback</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs"
+                    value={tariffConfig.averageRatePerKWh}
+                    onChange={(e) => setTariffConfig({ ...tariffConfig, averageRatePerKWh: parseFloat(e.target.value) || 0 })}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4 bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                <h4 className="text-sm font-bold text-slate-300">Tier Slabs Configuration</h4>
+                {tariffConfig.slabs.map((slab, index) => (
+                  <div key={index} className="grid grid-cols-2 sm:grid-cols-3 gap-2 items-center">
+                    <span className="text-xs text-slate-300 font-semibold">{slab.label}</span>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] text-slate-500">Rate (Rs/Unit)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-white text-xs"
+                        value={slab.rate}
+                        onChange={(e) => {
+                          const newSlabs = [...tariffConfig.slabs];
+                          newSlabs[index].rate = parseFloat(e.target.value) || 0;
+                          setTariffConfig({ ...tariffConfig, slabs: newSlabs });
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] text-slate-500">Fixed Chg (Rs)</label>
+                      <input
+                        type="number"
+                        step="1"
+                        className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-white text-xs"
+                        value={slab.fixedCharge}
+                        onChange={(e) => {
+                          const newSlabs = [...tariffConfig.slabs];
+                          newSlabs[index].fixedCharge = parseFloat(e.target.value) || 0;
+                          setTariffConfig({ ...tariffConfig, slabs: newSlabs });
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={handleSaveTariff}
+              disabled={tariffLoading}
+              className="px-6 py-3 mt-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-glow transition-all flex items-center gap-2"
+            >
+              <Check className="w-4 h-4" />
+              {tariffLoading ? 'Saving...' : 'Save Tariff Configuration'}
+            </button>
           </div>
         </div>
       )}

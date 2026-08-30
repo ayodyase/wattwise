@@ -1,0 +1,287 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1350" width="100%" height="100%" style="background:#ffffff; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <style>
+      .title-bold { font-size: 22px; font-weight: 800; fill: #0f172a; }
+      .section-heading { font-size: 16px; font-weight: 700; fill: #0f172a; }
+      .wire-box { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; }
+      .wire-box-dark { fill: #0f172a; stroke: #0f172a; stroke-width: 1.5; }
+      .wire-fill { fill: #334155; }
+      .wire-fill-light { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1; }
+      .wire-line { stroke: #475569; stroke-width: 2; stroke-linecap: round; }
+      .wire-line-sm { stroke: #64748b; stroke-width: 1.4; stroke-linecap: round; }
+      .wire-line-thick { stroke: #1e293b; stroke-width: 3; stroke-linecap: round; }
+      .wire-x { stroke: #475569; stroke-width: 1.4; }
+      .text-caption { font-size: 11px; fill: #475569; font-weight: 600; text-anchor: middle; }
+      .text-body { font-size: 12px; fill: #334155; }
+      .logo-circle { fill: #ffffff; stroke: #0f172a; stroke-width: 2; }
+      .logo-icon { font-size: 18px; font-weight: 800; fill: #0f172a; text-anchor: middle; dominant-baseline: central; }
+      .annotation-badge { fill: #fee2e2; stroke: #ef4444; stroke-width: 1.2; rx: 4; }
+      .annotation-text { font-size: 10px; font-weight: 700; fill: #b91c1c; text-anchor: middle; dominant-baseline: central; }
+    </style>
+  </defs>
+
+  <!-- Page Container Frame -->
+  <rect x="40" y="30" width="1120" height="1290" rx="8" class="wire-box" stroke-width="2" />
+  
+  <!-- Browser Chrome / URL Bar Simulation -->
+  <rect x="40" y="30" width="1120" height="40" fill="#f8fafc" stroke="#1e293b" stroke-width="1.5" />
+  <circle cx="65" cy="50" r="5" fill="#cbd5e1" />
+  <circle cx="80" cy="50" r="5" fill="#cbd5e1" />
+  <circle cx="95" cy="50" r="5" fill="#cbd5e1" />
+  <rect x="130" y="40" width="450" height="20" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <text x="145" y="54" font-size="11" fill="#64748b">https://wattwise.lk/home</text>
+
+  <!-- TOP NAVIGATION BAR -->
+  <g id="navbar" transform="translate(40, 70)">
+    <rect x="0" y="0" width="1120" height="65" class="wire-box" />
+    <!-- Brand Logo -->
+    <circle cx="50" cy="32" r="18" class="logo-circle" />
+    <text x="50" y="32" class="logo-icon">⚡</text>
+    <text x="80" y="38" font-size="18" font-weight="800" fill="#0f172a">WattWise</text>
+    
+    <!-- Nav Links (Home active) -->
+    <g transform="translate(420, 20)">
+      <rect x="0" y="0" width="70" height="26" rx="4" class="wire-box-dark" />
+      <text x="35" y="17" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Home</text>
+
+      <rect x="80" y="0" width="75" height="26" rx="4" class="wire-box" />
+      <text x="117" y="17" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Features</text>
+
+      <rect x="165" y="0" width="80" height="26" rx="4" class="wire-box" />
+      <text x="205" y="17" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Predictor</text>
+
+      <rect x="255" y="0" width="80" height="26" rx="4" class="wire-box" />
+      <text x="295" y="17" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">CEB Slabs</text>
+
+      <rect x="345" y="0" width="75" height="26" rx="4" class="wire-box" />
+      <text x="382" y="17" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Solar PV</text>
+
+      <rect x="430" y="0" width="75" height="26" rx="4" class="wire-box" />
+      <text x="467" y="17" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Contact</text>
+    </g>
+
+    <!-- Auth Button -->
+    <rect x="990" y="18" width="90" height="28" rx="6" class="wire-box-dark" />
+    <text x="1035" y="36" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Sign In</text>
+  </g>
+
+  <!-- 1. HERO BANNER - SLIDE CAROUSEL -->
+  <g id="hero-banner" transform="translate(40, 135)">
+    <rect x="0" y="0" width="1120" height="260" class="wire-box" />
+    <line x1="0" y1="0" x2="1120" y2="260" class="wire-x" />
+    <line x1="1120" y1="0" x2="0" y2="260" class="wire-x" />
+    
+    <!-- Left / Right Carousel Buttons -->
+    <circle cx="40" cy="130" r="20" fill="#ffffff" stroke="#1e293b" stroke-width="2" />
+    <text x="40" y="130" font-size="22" font-weight="bold" fill="#0f172a" text-anchor="middle" dominant-baseline="central">&lt;</text>
+
+    <circle cx="1080" cy="130" r="20" fill="#ffffff" stroke="#1e293b" stroke-width="2" />
+    <text x="1080" y="130" font-size="22" font-weight="bold" fill="#0f172a" text-anchor="middle" dominant-baseline="central">&gt;</text>
+
+    <!-- Slide Caption Card -->
+    <rect x="360" y="80" width="400" height="90" rx="8" fill="#ffffff" stroke="#0f172a" stroke-width="2" />
+    <text x="560" y="112" class="title-bold" text-anchor="middle">Intelligent Energy Forecasting</text>
+    <text x="560" y="136" font-size="13" fill="#475569" text-anchor="middle">CEB 2024 Tariff Slabs • Random Forest ML Prediction</text>
+    <rect x="490" y="146" width="140" height="26" rx="4" class="wire-box-dark" />
+    <text x="560" y="163" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Start Prediction ➔</text>
+
+    <!-- Pagination Indicator Dots -->
+    <g transform="translate(530, 235)">
+      <circle cx="0" cy="0" r="4" fill="#0f172a" />
+      <circle cx="18" cy="0" r="4" fill="#cbd5e1" />
+      <circle cx="36" cy="0" r="4" fill="#cbd5e1" />
+      <circle cx="54" cy="0" r="4" fill="#cbd5e1" />
+    </g>
+  </g>
+
+  <!-- 2. ABOUT US SECTION (2 COLUMNS) -->
+  <g id="about-us" transform="translate(40, 395)">
+    <rect x="0" y="0" width="1120" height="280" class="wire-box" />
+    
+    <!-- Section Header Bar -->
+    <rect x="50" y="25" width="160" height="20" rx="4" class="wire-fill-dark" />
+    <text x="130" y="39" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">ABOUT WATTWISE</text>
+
+    <!-- Left Column: Company / Architecture Image -->
+    <g transform="translate(50, 60)">
+      <rect x="0" y="0" width="460" height="190" rx="6" class="wire-box" />
+      <line x1="0" y1="0" x2="460" y2="190" class="wire-x" />
+      <line x1="460" y1="0" x2="0" y2="190" class="wire-x" />
+      <rect x="155" y="80" width="150" height="30" rx="4" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="230" y="99" class="text-caption">System Telemetry &amp; ML Engine</text>
+    </g>
+
+    <!-- Right Column: Intro Title, Description &amp; CTA Button -->
+    <g transform="translate(550, 60)">
+      <rect x="0" y="5" width="280" height="24" rx="4" class="wire-fill-dark" />
+      <text x="10" y="21" font-size="14" font-weight="800" fill="#ffffff">Smart Energy Consumption Prediction</text>
+
+      <line x1="0" y1="48" x2="520" y2="48" class="wire-line-thick" />
+      <line x1="0" y1="66" x2="500" y2="66" class="wire-line" />
+      <line x1="0" y1="84" x2="520" y2="84" class="wire-line" />
+      <line x1="0" y1="102" x2="460" y2="102" class="wire-line" />
+      <line x1="0" y1="120" x2="510" y2="120" class="wire-line" />
+      <line x1="0" y1="138" x2="380" y2="138" class="wire-line" />
+
+      <!-- Metric Badges Row -->
+      <g transform="translate(0, 155)">
+        <rect x="0" y="0" width="100" height="30" rx="4" class="wire-fill-light" />
+        <text x="50" y="19" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">0.91 R² Accuracy</text>
+
+        <rect x="115" y="0" width="115" height="30" rx="4" class="wire-fill-light" />
+        <text x="172" y="19" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">19,735 Telemetry</text>
+
+        <rect x="245" y="0" width="135" height="30" rx="4" class="wire-box-dark" />
+        <text x="312" y="19" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Explore Features ➔</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- 3. SPONSORS &amp; INSTITUTIONAL PARTNERS -->
+  <g id="sponsors" transform="translate(40, 675)">
+    <rect x="0" y="0" width="1120" height="150" class="wire-box" />
+    
+    <rect x="470" y="18" width="180" height="20" rx="4" class="wire-fill-dark" />
+    <text x="560" y="32" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">INSTITUTIONAL PARTNERS</text>
+
+    <!-- 8 Sponsor Boxes -->
+    <g transform="translate(45, 55)">
+      <!-- Sponsor 1: CEB -->
+      <rect x="0" y="0" width="115" height="65" rx="6" class="wire-box" />
+      <line x1="0" y1="0" x2="115" y2="65" class="wire-x" />
+      <line x1="115" y1="0" x2="0" y2="65" class="wire-x" />
+      <rect x="25" y="22" width="65" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="57" y="37" class="text-caption">CEB</text>
+
+      <!-- Sponsor 2: LECO -->
+      <rect x="130" y="0" width="115" height="65" rx="6" class="wire-box" />
+      <line x1="130" y1="0" x2="245" y2="65" class="wire-x" />
+      <line x1="245" y1="0" x2="130" y2="65" class="wire-x" />
+      <rect x="155" y="22" width="65" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="187" y="37" class="text-caption">LECO</text>
+
+      <!-- Sponsor 3: SLSEA -->
+      <rect x="260" y="0" width="115" height="65" rx="6" class="wire-box" />
+      <line x1="260" y1="0" x2="375" y2="65" class="wire-x" />
+      <line x1="375" y1="0" x2="260" y2="65" class="wire-x" />
+      <rect x="285" y="22" width="65" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="317" y="37" class="text-caption">SLSEA</text>
+
+      <!-- Sponsor 4: ICBT -->
+      <rect x="390" y="0" width="115" height="65" rx="6" class="wire-box" />
+      <line x1="390" y1="0" x2="505" y2="65" class="wire-x" />
+      <line x1="505" y1="0" x2="390" y2="65" class="wire-x" />
+      <rect x="415" y="22" width="65" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="447" y="37" class="text-caption">ICBT</text>
+
+      <!-- Sponsor 5: Kaggle -->
+      <rect x="520" y="0" width="115" height="65" rx="6" class="wire-box" />
+      <line x1="520" y1="0" x2="635" y2="65" class="wire-x" />
+      <line x1="635" y1="0" x2="520" y2="65" class="wire-x" />
+      <rect x="545" y="22" width="65" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="577" y="37" class="text-caption">Kaggle</text>
+
+      <!-- Sponsor 6: React -->
+      <rect x="650" y="0" width="115" height="65" rx="6" class="wire-box" />
+      <line x1="650" y1="0" x2="765" y2="65" class="wire-x" />
+      <line x1="765" y1="0" x2="650" y2="65" class="wire-x" />
+      <rect x="675" y="22" width="65" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="707" y="37" class="text-caption">React 18</text>
+
+      <!-- Sponsor 7: Python Flask -->
+      <rect x="780" y="0" width="115" height="65" rx="6" class="wire-box" />
+      <line x1="780" y1="0" x2="895" y2="65" class="wire-x" />
+      <line x1="895" y1="0" x2="780" y2="65" class="wire-x" />
+      <rect x="805" y="22" width="65" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="837" y="37" class="text-caption">Python ML</text>
+
+      <!-- Sponsor 8: MongoDB -->
+      <rect x="910" y="0" width="115" height="65" rx="6" class="wire-box" />
+      <line x1="910" y1="0" x2="1025" y2="65" class="wire-x" />
+      <line x1="1025" y1="0" x2="910" y2="65" class="wire-x" />
+      <rect x="935" y="22" width="65" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="967" y="37" class="text-caption">MongoDB</text>
+    </g>
+  </g>
+
+  <!-- 4. FOOTER (3 COLUMNS: CONTACT FORM, SITEMAP, BUSINESS INFO) -->
+  <g id="footer" transform="translate(40, 825)">
+    <rect x="0" y="0" width="1120" height="420" class="wire-box" />
+    
+    <!-- Col 1: Contact Form -->
+    <g transform="translate(50, 40)">
+      <rect x="0" y="0" width="140" height="20" rx="4" class="wire-fill-dark" />
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">QUICK INQUIRY</text>
+
+      <text x="0" y="44" font-size="11" font-weight="600" fill="#334155">Full Name</text>
+      <rect x="0" y="52" width="280" height="30" rx="4" class="wire-box" />
+
+      <text x="0" y="104" font-size="11" font-weight="600" fill="#334155">Email Address</text>
+      <rect x="0" y="112" width="280" height="30" rx="4" class="wire-box" />
+
+      <text x="0" y="164" font-size="11" font-weight="600" fill="#334155">Message</text>
+      <rect x="0" y="172" width="280" height="70" rx="4" class="wire-box" />
+
+      <rect x="0" y="255" width="120" height="32" rx="4" class="wire-box-dark" />
+      <text x="60" y="275" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Send Message ✉️</text>
+    </g>
+
+    <!-- Col 2: Sitemap Links -->
+    <g transform="translate(420, 40)">
+      <rect x="0" y="0" width="120" height="20" rx="4" class="wire-fill-dark" />
+      <text x="60" y="14" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">SYSTEM SITEMAP</text>
+
+      <g transform="translate(0, 40)">
+        <circle cx="5" cy="5" r="3" fill="#0f172a" />
+        <text x="18" y="9" font-size="12" font-weight="600" fill="#1e293b">ML Energy Predictor Engine</text>
+
+        <circle cx="5" cy="30" r="3" fill="#0f172a" />
+        <text x="18" y="34" font-size="12" font-weight="600" fill="#1e293b">CEB 2024 Tiered Tariff Slabs</text>
+
+        <circle cx="5" cy="55" r="3" fill="#0f172a" />
+        <text x="18" y="59" font-size="12" font-weight="600" fill="#1e293b">Rooftop Solar PV Simulator</text>
+
+        <circle cx="5" cy="80" r="3" fill="#0f172a" />
+        <text x="18" y="84" font-size="12" font-weight="600" fill="#1e293b">Appliance Energy Saving Tips</text>
+
+        <circle cx="5" cy="105" r="3" fill="#0f172a" />
+        <text x="18" y="109" font-size="12" font-weight="600" fill="#1e293b">Personal Telemetry History Log</text>
+
+        <circle cx="5" cy="130" r="3" fill="#0f172a" />
+        <text x="18" y="134" font-size="12" font-weight="600" fill="#1e293b">Building Multi-Unit Manager</text>
+
+        <circle cx="5" cy="155" r="3" fill="#0f172a" />
+        <text x="18" y="159" font-size="12" font-weight="600" fill="#1e293b">Enterprise Admin Console</text>
+      </g>
+    </g>
+
+    <!-- Col 3: Brand &amp; Business Contact Info -->
+    <g transform="translate(780, 40)">
+      <circle cx="30" cy="20" r="18" class="logo-circle" />
+      <text x="30" y="20" class="logo-icon">⚡</text>
+      <text x="60" y="26" font-size="18" font-weight="800" fill="#0f172a">WattWise LK</text>
+
+      <text x="0" y="65" font-size="12" fill="#475569" width="280">AI-driven smart electricity consumption forecasting and Ceylon Electricity Board bill optimization platform.</text>
+
+      <g transform="translate(0, 110)">
+        <rect x="0" y="0" width="24" height="24" rx="4" class="wire-box" />
+        <text x="12" y="16" font-size="12" text-anchor="middle">📍</text>
+        <text x="35" y="16" font-size="12" font-weight="600" fill="#1e293b">123 Energy Plaza, Colombo 03, LK</text>
+
+        <rect x="0" y="36" width="24" height="24" rx="4" class="wire-box" />
+        <text x="12" y="52" font-size="12" text-anchor="middle">📞</text>
+        <text x="35" y="52" font-size="12" font-weight="600" fill="#1e293b">+94 11 234 5678 / +94 77 123 4567</text>
+
+        <rect x="0" y="72" width="24" height="24" rx="4" class="wire-box" />
+        <text x="12" y="88" font-size="12" text-anchor="middle">📧</text>
+        <text x="35" y="88" font-size="12" font-weight="600" fill="#1e293b">support@wattwise.lk</text>
+      </g>
+    </g>
+
+    <!-- Bottom Copyright Bar -->
+    <line x1="0" y1="360" x2="1120" y2="360" class="wire-box" />
+    <text x="50" y="392" font-size="11" fill="#64748b">© 2026 WattWise Energy Management System. All rights reserved.</text>
+    <text x="1070" y="392" font-size="11" fill="#64748b" text-anchor="end">BSc Software Engineering Capstone</text>
+  </g>
+
+</svg>

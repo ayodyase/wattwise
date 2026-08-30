@@ -4,6 +4,7 @@ const axios = require('axios');
 const Prediction = require('../models/Prediction');
 const Building = require('../models/Building');
 const Alert = require('../models/Alert');
+const TariffConfig = require('../models/TariffConfig');
 const { protect } = require('../middleware/auth');
 const { validatePredictionInput } = require('../middleware/validate');
 
@@ -59,12 +60,16 @@ router.post('/', protect, validatePredictionInput, async (req, res) => {
       else if (predictedWh <= 350) category = 'High';
       else category = 'Very High';
 
+      let config = await TariffConfig.findOne({ isActive: true });
+      const avgRatePerKWh = config ? (config.averageRatePerKWh || 27.50) : 27.50;
+      const ratePerWh = avgRatePerKWh / 1000.0;
+
       mlResult = {
         success: true,
         predictedWh,
         lightsWh: Math.round(predictedWh * 0.12),
         usageCategory: category,
-        estimatedCostLKR: Math.round(predictedWh * 0.0275 * 100) / 100
+        estimatedCostLKR: Math.round(predictedWh * ratePerWh * 100) / 100
       };
     }
 

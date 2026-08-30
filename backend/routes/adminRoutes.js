@@ -6,6 +6,7 @@ const Prediction = require('../models/Prediction');
 const AuditLog = require('../models/AuditLog');
 const Announcement = require('../models/Announcement');
 const Tip = require('../models/Tip');
+const TariffConfig = require('../models/TariffConfig');
 const { protect, authorize } = require('../middleware/auth');
 
 const FLASK_ML_URL = process.env.FLASK_ML_URL || 'http://127.0.0.1:5001';
@@ -231,6 +232,62 @@ router.delete('/announcements/:id', async (req, res) => {
     }
     await announcement.deleteOne();
     res.status(200).json({ success: true, message: 'Announcement removed' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// @route GET /api/admin/tariff
+router.get('/tariff', async (req, res) => {
+  try {
+    let config = await TariffConfig.findOne({ isActive: true });
+    if (!config) {
+      // Create default if none exists
+      config = await TariffConfig.create({
+        name: 'CEB Residential Current',
+        slabs: [
+          { limit: 30, rate: 2.50, fixedCharge: 180, label: '0 - 30 units' },
+          { limit: 60, rate: 4.85, fixedCharge: 240, label: '31 - 60 units' },
+          { limit: 90, rate: 7.85, fixedCharge: 360, label: '61 - 90 units' },
+          { limit: 120, rate: 10.00, fixedCharge: 960, label: '91 - 120 units' },
+          { limit: 180, rate: 27.75, fixedCharge: 1500, label: '121 - 180 units' },
+          { limit: 999999, rate: 45.00, fixedCharge: 2000, label: '181+ units' }
+        ],
+        fuelSurchargePercent: 0.0,
+        averageRatePerKWh: 27.50
+      });
+    }
+    res.status(200).json({ success: true, config });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// @route PUT /api/admin/tariff
+router.put('/tariff', async (req, res) => {
+  try {
+    const { slabs, fuelSurchargePercent, averageRatePerKWh } = req.body;
+    let config = await TariffConfig.findOne({ isActive: true });
+    
+    if (!config) {
+      config = new TariffConfig({ isActive: true });
+    }
+
+    if (slabs) config.slabs = slabs;
+    if (fuelSurchargePercent !== undefined) config.fuelSurchargePercent = fuelSurchargePercent;
+    if (averageRatePerKWh !== undefined) config.averageRatePerKWh = averageRatePerKWh;
+    
+    config.updatedBy = req.user._id;
+    await config.save();
+
+    await AuditLog.create({
+      userId: req.user._id,
+      userName: req.user.name,
+      action: 'ADMIN_UPDATE_TARIFF',
+      details: `Updated CEB Tariff Config. Fuel Surcharge: ${config.fuelSurchargePercent}%`
+    });
+
+    res.status(200).json({ success: true, config });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
